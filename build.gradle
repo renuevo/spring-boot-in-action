@@ -1,0 +1,52 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.9.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.8.RELEASE"
+    }
+}
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    group = 'com.github.renuevo'
+    version = '0.0.0'
+    sourceCompatibility = 11
+
+    repositories {
+        mavenCentral()
+    }
+
+    task initSourceFolders {
+        sourceSets*.java.srcDirs*.each {
+            if( !it.exists() ) {
+                it.mkdirs()
+            }
+        }
+
+        sourceSets*.resources.srcDirs*.each {
+            if( !it.exists() ) {
+                it.mkdirs()
+            }
+        }
+    }
+
+    dependencies {
+        implementation group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+    }
+}
+
+project(':spring-boot-batch-in-action')
