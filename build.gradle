@@ -41,12 +41,14 @@ subprojects {
 
     dependencies {
         implementation group: 'com.google.guava', name: 'guava', version: '28.1-jre'
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
+        compileOnly 'org.projectlombok:lombok:1.18.10'
+        annotationProcessor 'org.projectlombok:lombok:1.18.10'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
     }
 }
 
-project(':spring-boot-batch-in-action')
+project(':spring-boot-batch-in-action'){
+
+}
