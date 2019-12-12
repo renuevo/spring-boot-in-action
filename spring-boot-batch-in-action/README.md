@@ -19,7 +19,7 @@
 
 
 
-#### Data `Reader`와 `Writer`를 지원
+## Data `Reader`와 `Writer`를 지원
 
 | DataSource | 기술      | 설명                          |
 | ---------- | --------- | ----------------------------- |
@@ -39,9 +39,9 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 
 
 
-#### Spring Batch 기본 구조
+## Spring Batch 기본 구조
 
-![Spring Batch Diagram](./images/Ch02_SpringBatchArchitecture_Architecture_StepTaskletFlow.png)
+![Spring Batch Diagram](./assets/Ch02_SpringBatchArchitecture_Architecture_StepTaskletFlow.png)
 
  <span class='img_caption'>Source : [Spring Batch Architecture](https://terasoluna-batch.github.io/guideline/5.0.0.RELEASE/en/Ch02_SpringBatchArchitecture.html) </span> 
 
@@ -91,7 +91,7 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 
 
 
-#### Srping Boot Meta Data
+## Srping Boot Meta Data
 
 1. 이전 실행 Job History
 2. 실패한 Batch와 Parameter / 성공한 Job
@@ -100,7 +100,7 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 
 
 
-![Spring Batch Meta Data Schema](./images/meta-data-erd.png)
+![Spring Batch Meta Data Schema](./assets/meta-data-erd.png)
 
  <span class='img_caption'>Source : [Spring Batch Doc](https://docs.spring.io/spring-batch/docs/3.0.x/reference/html/metaDataSchema.html) </span> 
 
@@ -147,13 +147,13 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 
 
 
-![Spring Boot Batch Instance](D:\notion\images\spring-boot-batch-instance.PNG)
+![Spring Boot Batch Instance](./assets/spring-boot-batch-instance.PNG)
 
  <span class='img_caption'>Spring Boot Batch Instance</span> 
 
 
 
-![Spring Boot Batch Param](D:\notion\images\spring-boot-batch-param.PNG)
+![Spring Boot Batch Param](./assets/spring-boot-batch-param.PNG)
 
  <span class='img_caption'>Spring Boot Batch Param</span>
 
@@ -161,15 +161,20 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 
 - 동일 `Parameter`로 실행시 이미 `Instance`가 존재해서 에러가 납니다
 
-  ![Parameter Exist Error](D:\notion\images\parameter-exist.PNG)
+  ![Parameter Exist Error](./assets/parameter-exist.PNG)
 
  <span class='img_caption'>Parameter Exist Error</span>
 
 
 
 3. **BATCH_JOB_EXECUTION**
+
    1. batch_job_instance와 대응되면서 `성공/실패` 내역을 갖고 있습니다
    2. process는 해당 table을 조회해서 재수행이 필요한 job만 처리 합니다
+
+   ![BATCH_JOB_EXECUTION](./assets/job-completed.PNG)
+
+ <span class='img_caption'>BATCH_JOB_EXECUTION</span>
 
 
 
@@ -177,11 +182,176 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 
 
 
-#### Spring Batch Flow
+## Spring Batch Flow
 
 
 
+```java
+contribution.setExitStatus(ExitStatus.FAILED); //setExitStatus로 상태를 저장 할 수 있다
+```
 
+
+
+**흐름 제어**
+
+1. on - 이전 step의 status에 대한 다음 행동
+2. to - on과 연결된 다음 행동
+3. end - 반환 / build 종료 2가지가 존재 맺음 메소드
+4. from - on과 end 이외 추가전 이벤트 캐치 사용에 사용  
+
+
+
+```java
+@Slf4j
+@Configuration
+@AllArgsConstructor
+public class JobSecondConfig {
+
+    private final JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
+
+    @Bean
+    public Job jobSecondBean(){
+        return jobBuilderFactory.get("testJob2")
+                .start(jobStep1())
+                    .on("FAILED")   //FAILED 이면
+                    .to(jobStep3()) //step3 실행
+                    .on("*") //to와 관계없이
+                    .end()  //반환 종료
+                .from(jobStep1())  //on을 사용한후 추가적 이벤트 캐치
+                    .on("*")    //FAILED외의 모든 것
+                    .to(jobStep2()) //step2 실행
+                    .next(jobStep3())   //정상 종료되면 step3 실행
+                    .on("*")    //step3 결과 상관없이
+                    .end()  //반환 종료
+                .end() //build 종료
+                .build();
+    }
+
+
+    @Bean
+    public Step jobStep1(){
+        return stepBuilderFactory.get("step1")
+                .tasklet((contribution, chunkContext) -> {
+                    log.info("[========= This is Step1 ==========]");
+                    contribution.setExitStatus(ExitStatus.FAILED);      //Status Failed
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    public Step jobStep2(){
+        return stepBuilderFactory.get("step2")
+                .tasklet((contribution, chunkContext) -> {
+                    log.info("[========= This is Step2 ==========]");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    public Step jobStep3(){
+        return stepBuilderFactory.get("step3")
+                .tasklet((contribution, chunkContext) -> {
+                    log.info("[========= This is Step3 ==========]");
+                    contribution.setExitStatus(ExitStatus.FAILED);      //Status Failed
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+}
+
+```
+
+
+
+![Fail Flow](./assets/job-step1.PNG)
+
+<span class='img_caption'>Fail Flow</span>
+
+
+
+```java
+    @Bean
+    public Step jobStep1(){
+        return stepBuilderFactory.get("step1")
+                .tasklet((contribution, chunkContext) -> {
+                    log.info("[========= This is Step1 ==========]");
+                    /*
+                    	contribution.setExitStatus(ExitStatus.FAILED);
+                    */
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+```
+
+![Standard Flow](./assets/job-step.PNG)
+
+<span class='img_caption'>Standard  Flow</span>
+
+
+
+**BATCH_STEP_EXECUTION**
+
+*각각의 Step에 대한 성공 실패 여부가 기록됩니다*
+
+![BATCH_STEP_EXECUTION](./assets/step-completed.PNG)
+
+<span class='img_caption'>BATCH_STEP_EXECUTION</span>
+
+
+
+**위의 코드의 `문제점`**
+
+1. `Step`이 Flow랑 Process처리라는 `2가지`의 역할을 수행 합니다
+
+2. ExitStatus로는 다양한 `Flow 처리`에 번거로움이 있습니다
+
+
+
+#### JobExecutionDecider 를 통한 Flow 처리
+
+```java
+   	@Bean
+    public Job jobDeciderBean() {
+        return jobBuilderFactory.get("deTestJob")
+                .start(startStep())
+                .next(decider())	//JobExecutionDecider()로직 처리
+                .from(decider())	//JobExecutionDecider()결과 확인
+                    .on("testDecide")
+                    .to(startStep2())
+                .end()
+                .build();
+    }
+
+	@Bean
+    public JobExecutionDecider decider() {
+        return new jobDecider();
+    }
+
+    public static class jobDecider implements JobExecutionDecider{
+
+        @Override	//조건 정의 method
+        public FlowExecutionStatus decide(JobExecution jobExecution, StepExecution stepExecution) {
+            return new FlowExecutionStatus("testDecide");
+        }
+    }
+
+
+
+```
+
+
+
+**JobExecutionDecider **로 Flow를 제어하여 역할을 분리하고 유동적으로 많은 조건들을 생성해서 적용 가능하다
+
+
+
+------
 
 
 
