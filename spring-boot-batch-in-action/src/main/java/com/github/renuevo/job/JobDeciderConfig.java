@@ -26,10 +26,13 @@ public class JobDeciderConfig {
     public Job jobDeciderBean() {
         return jobBuilderFactory.get("deTestJob")
                 .start(startStep())
-                .next(decider())
-                .from(decider())
+                .next(decider())    //조건 실행
+                .from(decider())    //조건 상태값 확인
                     .on("testDecide")
                     .to(startStep2())
+                .from(decider())
+                    .on("testDecide2")
+                    .to(startStep3())
                 .end()
                 .build();
     }
@@ -73,6 +76,16 @@ public class JobDeciderConfig {
 
     public static class jobDecider implements JobExecutionDecider{
 
+        /**
+         * <pre>
+         *  @methodName : decide
+         *  @author : Deokhwa.Kim
+         *  @since : 2019-12-13 오후 5:38
+         *  @summary : 조건 setting
+         *  @param : [jobExecution, stepExecution]
+         *  @return : org.springframework.batch.core.job.flow.FlowExecutionStatus
+         * </pre>
+         */
         @Override
         public FlowExecutionStatus decide(JobExecution jobExecution, StepExecution stepExecution) {
             return new FlowExecutionStatus("testDecide");

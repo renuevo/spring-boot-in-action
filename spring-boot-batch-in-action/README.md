@@ -354,4 +354,84 @@ public class JobSecondConfig {
 ------
 
 
+## JobParameter & Scope
+
+*Barch Component에서 사용할 수 있게 지원되는 파라미터*
+
+
+
+```java
+@Value("#{jobParameters[parameterName]}")
+```
+
+
+
+**JobParameter Scope**
+
+1. JobScope : Step사용시 사용
+2. StepScope : Tasklet 사용시 사용
+
+`Double`,`Long`,`Date`,`String` 형식만을 지원합니다
+
+
+
+```java
+
+/**
+ * <pre>
+ * @className : JobParameterConfig
+ * @author : Deokhwa.Kim
+ * @since : 2019-12-13
+ * </pre>
+ */
+@Slf4j
+@Configuration
+@AllArgsConstructor
+public class JobParameterConfig {
+
+    private final JobBuilderFactory jobBuilderFactory;
+    private final StepBuilderFactory stepBuilderFactory;
+
+    @Bean
+    public Job jobScopeBean() {
+        return jobBuilderFactory.get("jobScope")
+                .start(scopeStep1(null))
+                .next(scopeStep2())
+                .build();
+    }
+
+    @Bean
+    @JobScope   //Step에 대해서 설정
+    public Step scopeStep1(@Value("#{jobParameters[requestDate]}") String requestDate) {
+        return stepBuilderFactory.get("scopeStep1")
+                .tasklet((contribution, chunkContext) -> {
+                    log.info("[========= This is scopeStep1 ==========]");
+                    log.info("{}",requestDate);
+                    return RepeatStatus.FINISHED;
+                }).build();
+    }
+
+    @Bean
+    public Step scopeStep2(){
+        return stepBuilderFactory.get("scopeStep2")
+                .tasklet(scopeStep2Tasklet(null))
+                .build();
+    }
+
+    @Bean
+    @StepScope  //Tasklet에 대해서 설정
+    public Tasklet scopeStep2Tasklet(@Value("#{jobParameters[requestDate]}") String requestDate){
+        return (contribution, chunkContext) -> {
+            log.info("[========= This is scopeStep2 ==========]");
+            log.info("{}",requestDate);
+            return RepeatStatus.FINISHED;
+        };
+    }
+
+}
+
+```
+
+
+
 
