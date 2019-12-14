@@ -30,7 +30,7 @@ public class JobParameterConfig {
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job jobScopeBean() {
+    public Job JobParameterBean() {
         return jobBuilderFactory.get("jobScope")
                 .start(scopeStep1(null))
                 .next(scopeStep2())

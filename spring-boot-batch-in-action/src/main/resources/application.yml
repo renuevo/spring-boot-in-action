@@ -4,8 +4,8 @@ spring:
   datasource:
     #continue-on-error: true
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:file:~/h2_test/spring-batch;AUTO_SERVER=TRUE
-    #jdbc-url: jdbc:h2:mem:testdb;MODE=MySQL
+    #url: jdbc:h2:file:~/h2_test/spring-batch;AUTO_SERVER=TRUE
+    url: jdbc:h2:mem:spring-batch;MODE=MySQL
     username: sa
     password:
     sql-script-encoding: UTF-8
