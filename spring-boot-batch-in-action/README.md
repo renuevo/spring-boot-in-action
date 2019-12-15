@@ -377,13 +377,6 @@ public class JobSecondConfig {
 
 ```java
 
-/**
- * <pre>
- * @className : JobParameterConfig
- * @author : Deokhwa.Kim
- * @since : 2019-12-13
- * </pre>
- */
 @Slf4j
 @Configuration
 @AllArgsConstructor
@@ -431,6 +424,102 @@ public class JobParameterConfig {
 }
 
 ```
+
+
+```
+@Bean에 @StepScope와 @JobScope를 같이 사용하면 Step의 시작과 종료시 생성/삭제가 이루어지게 됩니다  
+```
+
+
+
+1. JobParameter의 Late Binding
+
+   일반적인 Bean 생성시점이 아닌 지점에서 생성 되므로 `Controller`와 `Service`와 같은 **비지니스 로직 처리단계에서 Job Parameter를 할당** 할 수 있게 됩니다
+
+2. Component Parallel Processing 
+
+   일반적인 `Singleton` 처럼 생성되면 각각의 Step에서 Tasklet의 멤버변수등의 상태를 수정하는 일이 생기면서 데이터가 덮어써지게 됩니다 :point_right: [Race Condition 문제]([https://ko.wikipedia.org/wiki/%EA%B2%BD%EC%9F%81_%EC%83%81%ED%83%9C](https://ko.wikipedia.org/wiki/경쟁_상태))  
+
+   `@StepScope`로 **각각의 Step별로 별도의 Tasklet를 생성**하고 관리하게 하므로써 이러한 문제를 해결 할 수 있습니다
+
+
+
+#### JobParameter 주의 사항  
+
+1. JobParameter는 `@Value`를 통해서만 값을 할당 받을 수 있습니다  
+2. `@JobScope`와 `@StepScope`로 **Bean**을 생성할때만 Jobparameter가 생성되어 사용 할 수 있습니다  
+
+
+
+<span class='code_header'>**Job Parameter Bean**</span>
+
+![Jobparameter Bean](./assets/jobparameter.PNG)
+
+
+
+<span class='code_header'>**Job Tasklet**</span>
+
+![Jobparameter Component](./assets/jobparameter-component.PNG)
+
+
+
+<span class='code_header'>**Result**</span>
+
+![Jobparameter Component Result](./assets/jobparameter-component-complete.PNG)
+
+
+
+만약 `@StepScope`가 없는 Bean에  Jobparameter를 지정하게 되면 `생성시점` 때문에  <span class='red_font'>error</span>가 납니다
+
+![Jobparameter Error](./assets/jobparameter-component-fail.PNG) 
+
+
+
+#### JobParameter를 사용하는 이유  
+1. Late Binding (Command Line실행외의 다른 실행이 어려워 진다)  
+   *다음과 같이 동적 parameter의 대한 대응을 할 수 없습니다*  
+
+   ```java
+   @Slf4j
+   @RestController
+   public class JobController {	//단순 예제
+   
+       private final JobLauncher jobLauncher;
+       private final Job job;
+   
+       public JobController(JobLauncher jobLauncher, @Qualifier("JobParameterBean") Job job) {
+           this.jobLauncher = jobLauncher;
+           this.job = job;
+       }
+   
+       @GetMapping("/launchjob")
+       public String handle(@RequestParam("requestDate") String requestDate) {
+           try {
+               JobParameters jobParameters = new JobParametersBuilder()
+                       .addString("requestDate", requestDate)
+                       .addLong("time", System.currentTimeMillis())
+                       .toJobParameters();
+               jobLauncher.run(job, jobParameters);
+           } catch (Exception e) {
+               log.error("Error : {}", e.getMessage(), e);
+           }
+           return "Deon";
+       }
+   }
+   
+   ```
+
+   ![Batch Parameter Controller](./assets/batch-parameter-controller.PNG)  
+   ***Spring Batch에서는 웹서버로 Batch를 관리하기를 `권장하지 않습니다`*** :exclamation:  
+
+
+2. Meta Table의 활용성 (Job과 Parameter의 `1:1` 관계)  
+   *이 처럼 Meta Table을 활용하여 Job을 1번만 실행하는지의 여부 확인이 어려워 집니다*  
+   ![Parameter Exist Error](./assets/parameter-exist.PNG)  
+
+
+---
+
 
 
 
