@@ -438,7 +438,7 @@ public class JobParameterConfig {
 
 2. Component Parallel Processing 
 
-   일반적인 `Singleton` 처럼 생성되면 각각의 Step에서 Tasklet의 멤버변수등의 상태를 수정하는 일이 생기면서 데이터가 덮어써지게 됩니다 :point_right: [Race Condition 문제]([https://ko.wikipedia.org/wiki/%EA%B2%BD%EC%9F%81_%EC%83%81%ED%83%9C](https://ko.wikipedia.org/wiki/경쟁_상태))  
+   일반적인 `Singleton` 처럼 생성되면 각각의 Step에서 Tasklet의 멤버변수등의 상태를 수정하는 일이 생기면서 데이터가 덮어써지게 됩니다 :point_right: [Race Condition 문제](https://ko.wikipedia.org/wiki/경쟁_상태)  
 
    `@StepScope`로 **각각의 Step별로 별도의 Tasklet를 생성**하고 관리하게 하므로써 이러한 문제를 해결 할 수 있습니다
 

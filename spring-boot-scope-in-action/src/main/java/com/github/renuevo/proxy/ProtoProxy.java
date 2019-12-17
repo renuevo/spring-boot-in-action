@@ -1,4 +1,4 @@
-package com.github.renuevo.scope;
+package com.github.renuevo.proxy;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;

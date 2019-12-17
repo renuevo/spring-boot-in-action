@@ -53,3 +53,7 @@ subprojects {
 project(':spring-boot-batch-in-action'){
 
 }
+
+project(':spring-boot-scope-in-action'){
+
+}

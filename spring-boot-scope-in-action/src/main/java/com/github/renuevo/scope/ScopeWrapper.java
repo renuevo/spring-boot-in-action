@@ -1,5 +1,6 @@
 package com.github.renuevo.scope;
 
+import com.github.renuevo.proxy.ProtoProxy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
