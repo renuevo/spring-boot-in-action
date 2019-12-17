@@ -1,16 +1,17 @@
 package com.github.renuevo;
 
 import com.github.renuevo.scope.ScopeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@AllArgsConstructor
 @SpringBootApplication
 public class SpringBootScopeApplication implements CommandLineRunner {
 
-    @Autowired
-    private ScopeService scopeService;
+    private final ScopeService scopeService;
+
 
     public static void main(String[] args) {
         SpringApplication.run(SpringBootScopeApplication.class, args);

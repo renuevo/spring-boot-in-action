@@ -11,12 +11,18 @@ public class ProtoInterFaceBean {
     @Bean(name = "ProtoInterfaceProxy")
     @Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
     public ProtoInterface getProtoInterfaceProxyBean() {
-        return new ProtoInterfaceImpl("Proxy");
+        return new ProtoInterfaceImpl();
     }
 
     @Bean(name = "ProtoInterface")
     @Scope(value = "prototype")
     public ProtoInterface getProtoInterfaceBean() {
         return new ProtoInterfaceImpl();
+    }
+
+    @Bean(name = "ProtoInterfaceProxySafe")
+    @Scope(value = "prototype")
+    public ProtoInterfaceImpl getProtoInterfaceProxySafeBean() {
+        return new ProtoInterfaceImpl("Safe Bean");
     }
 }
