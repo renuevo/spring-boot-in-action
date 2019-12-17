@@ -39,15 +39,16 @@ public class Single {}
 @Scope("singleton")
 public class Single {}
 ```
-
+`Singleton`으로 생성하게 되면 어디서나 1개의 인스턴스를 참조하여 사용하게 됩니다  
 <br/>
 
-`Singleton`으로 생성하게 되면 어디서나 1개의 인스턴스를 참조하여 사용하게 됩니다  
 ```java
 @Component
 public class Single {}
 ```
 예를 들어 다음 같이 Singleton Bean을 하나 만들고  
+
+<br/>
 
 ```java
 @Component
@@ -60,6 +61,9 @@ public class ScopeWrapper {
     ...
 }
 ```
+
+<br/>
+
 WrapperClass를 하나 만들어서 해당 Bean을 Autowired DI 해줍니다
 ```java
 @Slf4j
@@ -94,6 +98,8 @@ public class Proto {}
 ```
 Prototype Bean을 하나 생성하고
 
+<br/>
+
 ```java
 @Component
 @AllArgsConstructor
@@ -105,6 +111,8 @@ public class ScopeWrapper {
 }
 ```
 아까와 같이 WrapperClass에 Propotype Bean을 DI해줍니다  
+
+<br/>
 
 ```java
 @Slf4j
