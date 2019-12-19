@@ -285,4 +285,99 @@ public class ProtoInterfaceImpl implements ProtoInterface {
     }
 }
 ```
+`Interface`를 생성하고 구현체인 `ProfoInterfaceImpl`을 생성하였습니다  
+<br/>
 
+```java
+
+@Configuration
+public class ProtoInterFaceBean {
+
+    @Bean(name = "ProtoInterfaceProxy")
+    @Scope(value = "prototype", proxyMode = ScopedProxyMode.TARGET_CLASS)
+    public ProtoInterface getProtoInterfaceProxyBean() {
+        return new ProtoInterfaceImpl();
+    }
+
+    @Bean(name = "ProtoInterface")
+    @Scope(value = "prototype")
+    public ProtoInterface getProtoInterfaceBean() {
+        return new ProtoInterfaceImpl();
+    }
+}
+```
+그리고 다음과 같이 각각 일반 Prototype Bean 한개와 ProxyMode의 Bean을 생성합니다  
+**Bean에서는 return은 Interface로 하지만 실제적으론 구현체인 ProtoInterfaceImpl을 생성하여 return 하였습니다**  
+
+<br/>
+
+```java
+@Slf4j
+@Service
+public class ScopeService {
+    
+    @Autowired
+    @Qualifier("ProtoInterface")
+    private  ProtoInterface protoInterface;
+
+    @Autowired
+    @Qualifier("ProtoInterfaceProxy")
+    private  ProtoInterface protoInterfaceProxy;
+
+    public void scopeTest() {
+                log.info("[============== ProtoInterfaceImpl Prototype Bean Return ProtoInterface ==============]");
+                log.info("Bean Is ProtoInterface Instranceof : " + (protoInterface instanceof ProtoInterface));
+                log.info("Bean Is ProtoInterfaceImpl Instranceof : " + (protoInterface instanceof ProtoInterfaceImpl));
+                System.out.println();
+        
+                log.info("[============== ProtoInterfaceImpl Prototype Proxy Bean Return ProtoInterface ==============]");
+                log.info("Proxy Bean Is ProtoInterface Instranceof : " + (protoInterfaceProxy instanceof ProtoInterface));
+                log.info("Proxy Bean Is ProtoInterfaceImpl Instranceof : " + (protoInterfaceProxy instanceof ProtoInterfaceImpl));
+                System.out.println();
+    }
+}
+
+```
+
+그 다음 다음과 같이 각각의 Bean을 DI 받아서 `instanceof`로 확인하면 어떻게 될까요?  
+
+![interface-bean](./assets/interface-bean.PNG)  
+일반적으로 생성된 Bean의 경우 당연하게도 interface와 구현체 모두 `true`로 확인이 가능합니다  
+
+<br/>
+
+![interface-proxy-bean](./assets/interface-proxy-bean.PNG)  
+하지만 Proxy의 한번 경유하는 특성으로 `Return Type`과 같은 interface에서만 `true`로 나온 것을 확인할 수 있습니다  
+
+<br/>
+
+이러한 문제로 ProxyMode가 걸린 Bean의 경우 주의가 필요합니다  
+
+```java
+@Configuration
+public class ProtoInterFaceBean {
+    ...
+
+    @Bean(name = "ProtoInterfaceProxySafe")
+    @Scope(value = "prototype")
+    public ProtoInterfaceImpl getProtoInterfaceProxySafeBean() {
+        return new ProtoInterfaceImpl("Safe Bean");
+    }
+}
+
+```
+다음과 같이 간단하게 `Return Type`을 맞춰 주는 것으로 해결 할 수 있습니다  
+
+![interface-proxy-bean-safe](./assets/interface-proxy-bean-safe.PNG)  
+
+<br/>
+
+---
+
+이것으로 Bean의 생명주기 Scope의 대한 포스팅을 마무리 합니다  
+
+![good](./assets/good-image.jpg)  
+
+Scope와 관련해서 이것저것 애매한 사항이 많았는데  
+이렇게 한번 정리하면서 소스를 짜고 보니 맘속까지 후련해 졌습니다  
+이 포스팅이 저와 같은 궁금증을 가지신 분들에서 도움이 되길 바립니다  
