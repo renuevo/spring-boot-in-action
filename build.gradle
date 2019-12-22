@@ -57,3 +57,8 @@ project(':spring-boot-batch-in-action'){
 project(':spring-boot-scope-in-action'){
 
 }
+
+
+project(':spring-boot-exception-in-action'){
+
+}

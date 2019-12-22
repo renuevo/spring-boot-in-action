@@ -1,2 +1,3 @@
 rootProject.name = 'spring-boot-in-action'
-include 'spring-boot-batch-in-action', 'spring-boot-scope-in-action'
+include 'spring-boot-batch-in-action', 'spring-boot-scope-in-action', 'spring-boot-exception-in-action'
+
