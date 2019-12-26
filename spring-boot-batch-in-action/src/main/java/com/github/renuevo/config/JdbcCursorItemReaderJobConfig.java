@@ -27,7 +27,6 @@ public class JdbcCursorItemReaderJobConfig {
 
     private static final int chunkSize = 10;    //트랜잭션 범위
 
-
     @Bean
     public Job jdbcCursorItemReaderJob() {
         return jobBuilderFactory.get("jdbcCursorItemReaderJob") // job name
@@ -52,7 +51,7 @@ public class JdbcCursorItemReaderJobConfig {
                 .fetchSize(chunkSize)       //Database에서 가져오는 개수 / read()를 통해 1개씩 (Paging과 다름)
                 .dataSource(dataSource)
                 .rowMapper(new BeanPropertyRowMapper<>(Pay.class))
-                .sql("SELECT id, amount, tx_name, tx_data_time FROM pay")
+                .sql("SELECT id, amount, tx_name, tx_date_time FROM pay")
                 .name("jdbcCursorItemReader")   //reader name
                 .build();
     }

@@ -2,17 +2,23 @@ spring:
   main:
     banner-mode: 'off'
   datasource:
-    #continue-on-error: true
-    driver-class-name: org.h2.Driver
-    #url: jdbc:h2:file:~/h2_test/spring-batch;AUTO_SERVER=TRUE
-    url: jdbc:h2:mem:spring-batch;MODE=MySQL
-    username: sa
-    password:
-    sql-script-encoding: UTF-8
+    hikari:
+      #continue-on-error: true
+      driver-class-name: org.h2.Driver
+      #jdbc-url: jdbc:h2:file:E:/dev/h2/spring-batch;AUTO_SERVER=TRUE
+      jdbc-url: jdbc:h2:mem:spring-batch
+      #jdbc-url: jdbc:h2:file:./spring-boot-batch-in-action/data/spring-batch;AUTO_SERVER=TRUE;
+      username: sa
+      password:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.H2Dialect
   batch:
     job:
       names: ${job.name:NONE}
+
+logging:
+  level:
+    org.springframework.batch: debug

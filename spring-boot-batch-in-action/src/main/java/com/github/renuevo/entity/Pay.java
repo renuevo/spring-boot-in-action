@@ -3,6 +3,7 @@ package com.github.renuevo.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @Getter
 @Entity
+@ToString
 @NoArgsConstructor
 public class Pay {
 
