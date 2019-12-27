@@ -47,7 +47,7 @@ public class JdbcCursorItemReaderJobConfig {
 
     @Bean
     public JdbcCursorItemReader<Pay> jdbcCursorItemReader() {
-        return new JdbcCursorItemReaderBuilder<Pay>()
+        return new JdbcCursorItemReaderBuilder<Pay>()   //Cursor는 하나의 Connection으로 사용하기 때문에 Timeout 시간을 길게 부여해야 한다
                 .fetchSize(chunkSize)       //Database에서 가져오는 개수 / read()를 통해 1개씩 (Paging과 다름)
                 .dataSource(dataSource)
                 .rowMapper(new BeanPropertyRowMapper<>(Pay.class))
@@ -56,8 +56,6 @@ public class JdbcCursorItemReaderJobConfig {
                 .build();
     }
 
-
-    @Bean
     public ItemWriter<Pay> jdbcCursorItemWriter() {
         return list -> {
             for (Pay pay : list) {
