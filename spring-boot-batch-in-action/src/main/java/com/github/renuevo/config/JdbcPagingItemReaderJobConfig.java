@@ -52,7 +52,7 @@ public class JdbcPagingItemReaderJobConfig {
     @Bean
     public JdbcPagingItemReader<Pay> jdbcPagingItemReader() throws Exception {
         Map<String, Object> parameterValues = Maps.newHashMap();
-        parameterValues.put("amount", 2000);
+        parameterValues.put("amount", 2000);    //조건절 파라미터
 
         return new JdbcPagingItemReaderBuilder<Pay>()
                 .pageSize(chunkSize)
@@ -60,7 +60,7 @@ public class JdbcPagingItemReaderJobConfig {
                 .dataSource(dataSource)
                 .rowMapper(new BeanPropertyRowMapper<>(Pay.class))
                 .queryProvider(createQueryProvider())
-                .parameterValues(parameterValues)
+                .parameterValues(parameterValues)   //Provider Where에 조건 세팅
                 .name("jdbcPagingItemReader")
                 .build();
     }
@@ -76,10 +76,10 @@ public class JdbcPagingItemReaderJobConfig {
     @Bean
     public PagingQueryProvider createQueryProvider() throws Exception{
         SqlPagingQueryProviderFactoryBean queryProviderFactoryBean = new SqlPagingQueryProviderFactoryBean();
-        queryProviderFactoryBean.setDataSource(dataSource);
-        queryProviderFactoryBean.setSelectClause("id, amount, tx_name, tx_date_time");
+        queryProviderFactoryBean.setDataSource(dataSource); //Datasource를 통한 DB Type 인식해서 Provider 자동 인식
+       queryProviderFactoryBean.setSelectClause("id, amount, tx_name, tx_date_time");
         queryProviderFactoryBean.setFromClause("from pay");
-        queryProviderFactoryBean.setWhereClause("where amount >= :amount");
+        queryProviderFactoryBean.setWhereClause("where amount >= :amount"); //조건
 
         Map<String, Order> sortKeys = Maps.newHashMap();
 
