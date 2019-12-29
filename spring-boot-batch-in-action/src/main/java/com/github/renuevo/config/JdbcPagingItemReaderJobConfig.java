@@ -74,10 +74,10 @@ public class JdbcPagingItemReaderJobConfig {
     }
 
     @Bean
-    public PagingQueryProvider createQueryProvider() throws Exception{
+    public PagingQueryProvider createQueryProvider() throws Exception {
         SqlPagingQueryProviderFactoryBean queryProviderFactoryBean = new SqlPagingQueryProviderFactoryBean();
         queryProviderFactoryBean.setDataSource(dataSource); //Datasource를 통한 DB Type 인식해서 Provider 자동 인식
-       queryProviderFactoryBean.setSelectClause("id, amount, tx_name, tx_date_time");
+        queryProviderFactoryBean.setSelectClause("id, amount, tx_name, tx_date_time");
         queryProviderFactoryBean.setFromClause("from pay");
         queryProviderFactoryBean.setWhereClause("where amount >= :amount"); //조건
 

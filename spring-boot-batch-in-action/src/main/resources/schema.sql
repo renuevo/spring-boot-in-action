@@ -1,6 +1,15 @@
 DROP TABLE IF EXISTS pay;
+DROP TABLE IF EXISTS pay2;
 
 create table pay (
+  id         bigint not null auto_increment,
+  amount     bigint,
+  tx_name     varchar(255),
+  tx_date_time datetime,
+  primary key (id)
+);
+
+create table pay2 (
   id         bigint not null auto_increment,
   amount     bigint,
   tx_name     varchar(255),
