@@ -35,7 +35,7 @@ public class JpaPagingItemReaderJobConfig { //JPA는 Paging만 지원함
 
     @Bean
     public Step jpaPagingItemReaderStep() {
-        return stepBuilderFactory.get("jpaPaingItemReaderStep")
+        return stepBuilderFactory.get("jpaPagingItemReaderStep")
                 .<Pay, Pay>chunk(chunkSize)
                 .reader(jpaPagingItemReader())
                 .writer(jpaPagingItemWriter())

@@ -10,16 +10,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Setter
 @Getter
-@Entity
 @ToString
 @NoArgsConstructor
-public class Pay {
-
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+@Entity(name = "pay2")
+public class Pay2 {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,20 +25,17 @@ public class Pay {
     private String txName;
     private LocalDateTime txDateTime;
 
-    public Pay(Long amount, String txName, String txDateTime) {
+    public Pay2(Long amount, String txName, LocalDateTime txDateTime) {
         this.amount = amount;
         this.txName = txName;
-        this.txDateTime = convertStringToTime(txDateTime);
+        this.txDateTime = txDateTime;
     }
 
-    public Pay(Long id, Long amount, String txName, String txDateTime) {
+    public Pay2(Long id, Long amount, String txName, LocalDateTime txDateTime) {
         this.id = id;
         this.amount = amount;
         this.txName = txName;
-        this.txDateTime = convertStringToTime(txDateTime);
+        this.txDateTime = txDateTime;
     }
 
-    private LocalDateTime convertStringToTime(String txDateTime) {
-        return LocalDateTime.parse(txDateTime, DATE_TIME_FORMATTER);
-    }
 }
