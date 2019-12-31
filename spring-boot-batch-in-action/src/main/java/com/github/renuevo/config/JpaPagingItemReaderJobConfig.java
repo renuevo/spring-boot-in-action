@@ -52,8 +52,8 @@ public class JpaPagingItemReaderJobConfig { //JPA는 Paging만 지원함
                 .build();
     }
 
-
-    private ItemWriter<Pay> jpaPagingItemWriter() {
+    @Bean
+    public ItemWriter<Pay> jpaPagingItemWriter() {
         return list -> {
             for (Pay pay : list) {
                 log.info("Current Pay = {}", pay);

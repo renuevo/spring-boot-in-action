@@ -1,5 +1,6 @@
 package com.github.renuevo.config;
 
+
 import com.github.renuevo.entity.Pay;
 import com.github.renuevo.entity.Pay2;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.database.JpaItemWriter;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,7 @@ import javax.persistence.EntityManagerFactory;
 @Slf4j
 @Configuration
 @AllArgsConstructor
-public class JpaItemWriterJobConfig {
+public class CustomItemWriterJobConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -29,43 +30,44 @@ public class JpaItemWriterJobConfig {
     private static final int chunkSize = 10;
 
     @Bean
-    public Job jpaItemWriterJob(){
-        return jobBuilderFactory.get("jpaItemWriterJob")
-                .start(jpaItemWriterStep())
+    public Job customItemWriterJob() {
+        return jobBuilderFactory.get("customItemWriterJob")
+                .start(customItemWriterStep())
                 .build();
     }
 
     @Bean
-    public Step jpaItemWriterStep(){
-        return stepBuilderFactory.get("jpaItemWriterStep")
-                .<Pay, Pay2>chunk(chunkSize)    //Pay에서 Pay2로 Write
-                .reader(jpaItemWriterReader())  //Pay Reader
-                .processor(jpaItemProcessor())  //Pay To Pay2
-                .writer(jpaItemWriter())
+    public Step customItemWriterStep() {
+        return stepBuilderFactory.get("customItemWriterStep")
+                .<Pay, Pay2>chunk(chunkSize)
+                .reader(customItemWriterReader())
+                .processor(customItemWriterProcessor())
+                .writer(customItemWriter())
                 .build();
     }
 
     @Bean
-    public JpaPagingItemReader<Pay> jpaItemWriterReader(){
+    public JpaPagingItemReader<Pay> customItemWriterReader() {
         return new JpaPagingItemReaderBuilder<Pay>()
-                .name("jpaItemWriterReader")
+                .name("customItemWriterReader")
                 .entityManagerFactory(entityManagerFactory)
                 .pageSize(chunkSize)
-                .queryString("SELECT p FROM Pay p ORDER BY id ASC") //Paging Reader Add Order
+                .queryString("SELECT p FROM Pay p")
                 .build();
     }
 
     @Bean
-    public ItemProcessor<Pay, Pay2> jpaItemProcessor(){
+    public ItemProcessor<Pay, Pay2> customItemWriterProcessor() {
         return pay -> new Pay2(pay.getAmount(), pay.getTxName(), pay.getTxDateTime());
     }
 
-    
     @Bean
-    public JpaItemWriter<Pay2> jpaItemWriter(){
-        JpaItemWriter<Pay2> jpaItemWriter = new JpaItemWriter<>();
-        jpaItemWriter.setEntityManagerFactory(entityManagerFactory);
-        return jpaItemWriter;
+    public ItemWriter<Pay2> customItemWriter() {
+        return list -> {                //ItemWriter에서 write는 구현해 주면 된다
+            for (Pay2 item : list) {
+                log.info("Current Pay = {}", item);
+            }
+        };
     }
 
 }

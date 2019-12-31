@@ -56,6 +56,7 @@ public class JdbcCursorItemReaderJobConfig {
                 .build();
     }
 
+    @Bean
     public ItemWriter<Pay> jdbcCursorItemWriter() {
         return list -> {
             for (Pay pay : list) {

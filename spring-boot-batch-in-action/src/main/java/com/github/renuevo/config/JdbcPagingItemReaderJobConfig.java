@@ -65,7 +65,8 @@ public class JdbcPagingItemReaderJobConfig {
                 .build();
     }
 
-    private ItemWriter<Pay> jdbcPagingItemWriter() {
+    @Bean
+    public ItemWriter<Pay> jdbcPagingItemWriter() {
         return list -> {
             for (Pay pay : list) {
                 log.info("Current Pay = {}", pay);
