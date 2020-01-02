@@ -2,7 +2,10 @@ package com.github.renuevo.config;
 
 import com.github.renuevo.entity.Pay;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -28,6 +31,7 @@ public class JdbcCursorItemReaderJobConfig {
     private static final int chunkSize = 10;    //트랜잭션 범위
 
     @Bean
+    @SneakyThrows
     public Job jdbcCursorItemReaderJob() {
         return jobBuilderFactory.get("jdbcCursorItemReaderJob") // job name
                 .start(jdbcCursorItemReaderStep())
