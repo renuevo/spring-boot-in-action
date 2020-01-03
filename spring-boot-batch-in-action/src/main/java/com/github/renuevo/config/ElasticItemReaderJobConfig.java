@@ -52,6 +52,7 @@ public class ElasticItemReaderJobConfig {
                 .searchRequest(new SearchRequest("reader_test"))
                 .classType(ElasticReaderTestVo.class)
                 .pageSize(chunkSize)
+                .name("elasticItemReader")
                 .build();
     }
 
