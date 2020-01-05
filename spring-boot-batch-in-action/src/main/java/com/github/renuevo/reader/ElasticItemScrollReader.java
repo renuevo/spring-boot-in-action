@@ -2,6 +2,7 @@ package com.github.renuevo.reader;
 
 import com.github.renuevo.es.EsMapper;
 import com.google.common.collect.Lists;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Slf4j
+@Builder
 public class ElasticItemScrollReader<T> extends AbstractPaginatedDataItemReader<T> {
 
     private RestHighLevelClient restHighLevelClient;
@@ -50,6 +52,7 @@ public class ElasticItemScrollReader<T> extends AbstractPaginatedDataItemReader<
                 searchSourceBuilder.sort(Objects.requireNonNullElse(sort, "_id"));
                 searchSourceBuilder.size(pageSize);
                 searchRequest.source(searchSourceBuilder);
+                searchRequest.scroll(TimeValue.timeValueMinutes(3));
                 searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
             }else{
                 searchScrollRequest = new SearchScrollRequest(scrollId);

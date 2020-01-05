@@ -522,6 +522,35 @@ public class JobParameterConfig {
 
 
 ### Elastic Test Data Bulk
+
+PUT reader_test
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 3,
+      "number_of_replicas": 1
+    }
+  },
+  "mappings": {
+    "properties": {
+      "key": {
+        "type": "integer"
+      },
+      "name": {
+        "type": "text",
+        "analyzer": "nori",
+        "fields": {
+          "keyword": {
+            "type": "keyword"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
 POST reader_test/doc/_bulk
 {"index":{}}
 {"key": 1,"name": "test1"}

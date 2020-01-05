@@ -1,7 +1,7 @@
 package com.github.renuevo.config;
 
-
 import com.github.renuevo.reader.ElasticItemReader;
+import com.github.renuevo.reader.ElasticItemScrollReader;
 import com.github.renuevo.vo.ElasticReaderTestVo;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -19,44 +19,44 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 @AllArgsConstructor
-public class ElasticItemReaderJobConfig {
+public class ElasticItemScrollReaderJobConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     private final RestHighLevelClient restHighLevelClient;
 
-    private final static int chunkSize = 8;
+    private final static int chunkSize = 3;
 
     @Bean
-    public Job elasticItemReaderJob() {
-        return jobBuilderFactory.get("elasticItemReaderJob")
-                .start(elasticItemReaderStep())
+    public Job elasticItemScrollReaderJob() {
+        return jobBuilderFactory.get("elasticItemScrollReaderJob")
+                .start(elasticItemScrollReaderStep())
                 .build();
     }
 
     @Bean
-    public Step elasticItemReaderStep() {
-        return stepBuilderFactory.get("elasticItemReaderStep")
+    public Step elasticItemScrollReaderStep() {
+        return stepBuilderFactory.get("elasticItemScrollReaderStep")
                 .<ElasticReaderTestVo, ElasticReaderTestVo>chunk(chunkSize)
-                .reader(elasticItemReader())
-                .writer(elasticItemReaderWriter())  //processor 까지 한번에 처리되고 list로 넘어옴
+                .reader(elasticItemScrollReader())
+                .writer(elasticItemScrollReaderWriter())  //processor 까지 한번에 처리되고 list로 넘어옴
                 .build();
     }
 
     @Bean
     @SneakyThrows
-    public ElasticItemReader<ElasticReaderTestVo> elasticItemReader() {
-        return ElasticItemReader.<ElasticReaderTestVo>builder()
+    public ElasticItemScrollReader<ElasticReaderTestVo> elasticItemScrollReader() {
+        return ElasticItemScrollReader.<ElasticReaderTestVo>builder()
                 .sort("key")
                 .restHighLevelClient(restHighLevelClient)
                 .searchRequest(new SearchRequest("reader_test"))
                 .classType(ElasticReaderTestVo.class)
                 .pageSize(chunkSize)
-                .name("elasticItemReader")
+                .name("elasticItemScrollReader")
                 .build();
     }
 
-    public ItemWriter<ElasticReaderTestVo> elasticItemReaderWriter() {
+    public ItemWriter<ElasticReaderTestVo> elasticItemScrollReaderWriter() {
         return list -> {
             for (ElasticReaderTestVo elasticReaderTestVo : list) {
                 log.info("elastic = {}", elasticReaderTestVo);
