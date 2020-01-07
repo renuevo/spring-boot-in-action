@@ -51,7 +51,6 @@ public class ElasticItemWriterJobConfig {
     @Bean
     public ElasticItemReader<ElasticReaderTestVo> elasticItemWriterReader() {
         return ElasticItemReader.<ElasticReaderTestVo>builder()
-                .sort("key")
                 .restHighLevelClient(restHighLevelClient)
                 .searchRequest(new SearchRequest("reader_test"))
                 .classType(ElasticReaderTestVo.class)
