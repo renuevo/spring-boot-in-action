@@ -49,7 +49,7 @@ public class ElasticItemScrollReader<T> extends AbstractPaginatedDataItemReader<
 
             if (page == 0) {
                 if (queryBuilder != null) searchSourceBuilder.query(queryBuilder);
-                searchSourceBuilder.sort(Objects.requireNonNullElse(sort, "_id"));
+                searchSourceBuilder.sort(Objects.requireNonNullElse(sort, "_doc")); //Performance
                 searchSourceBuilder.size(pageSize);
                 searchRequest.source(searchSourceBuilder);
                 searchRequest.scroll(TimeValue.timeValueMinutes(3));

@@ -37,7 +37,7 @@ public class ElasticItemReader<T> extends AbstractPaginatedDataItemReader<T> {
 
             if (page == 0) {
                 if (queryBuilder != null) searchSourceBuilder.query(queryBuilder);
-                searchSourceBuilder.sort(Objects.requireNonNullElse(sort, "_id"));
+                searchSourceBuilder.sort(Objects.requireNonNullElse(sort, "_doc"));
             }
 
             searchSourceBuilder.from(page * pageSize);
