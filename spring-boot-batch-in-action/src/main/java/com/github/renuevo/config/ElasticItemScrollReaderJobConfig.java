@@ -47,7 +47,6 @@ public class ElasticItemScrollReaderJobConfig {
     @SneakyThrows
     public ElasticItemScrollReader<ElasticReaderTestVo> elasticItemScrollReader() {
         return ElasticItemScrollReader.<ElasticReaderTestVo>builder()
-                .sort("key")
                 .restHighLevelClient(restHighLevelClient)
                 .searchRequest(new SearchRequest("reader_test"))
                 .classType(ElasticReaderTestVo.class)
