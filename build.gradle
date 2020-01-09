@@ -62,3 +62,7 @@ project(':spring-boot-scope-in-action'){
 project(':spring-boot-exception-in-action'){
 
 }
+
+project(':spring-boot-rest-client-in-action'){
+
+}
