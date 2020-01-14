@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
         log.error("Handle Exception {}", e.getMessage(), e);
-        final ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse(ErrorCode.REST_CONTROLLER_VALUE);
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
