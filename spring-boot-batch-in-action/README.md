@@ -67,7 +67,6 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 - Job내부에서 수행될 1개의 Step
 
 - Tasklet에 Step에서 수행할 기능으로 써 2가지의 형태가 존재
-
   - User 커스텀
   - Reader & Processor & Writer(RPW)가 한 묶음으로 존재
 
@@ -117,6 +116,7 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 1. **BATCH_JOB_INSTANCE**
    1. job이 실행 되는 단위
    2. job의 name/key/version 등의 정보를 가지고 있습니다
+   
 2. **BATCH_JOB_EXCUTION_PARAMS**
    1. job과 1:1의 관계를 갖는 parameters 입니다
    2. job과 1:1의 속성때문에 param이 다르면 job_instance가 새롭게 생성됩니다
@@ -523,6 +523,9 @@ public class JobParameterConfig {
 
 ### Elastic Test Data Bulk
 
+**<span class='sub_header'>Test Index Mapping Json</span>**  
+```json
+
 PUT reader_test
 {
   "settings": {
@@ -549,7 +552,12 @@ PUT reader_test
   }
 }
 
+```
 
+<br/>
+
+**<span class='sub_header'>Test Data Bulk</span>**  
+```json
 
 POST reader_test/doc/_bulk
 {"index":{}}
@@ -572,3 +580,5 @@ POST reader_test/doc/_bulk
 {"key": 9,"name": "test9"}
 {"index":{}}
 {"key": 10,"name": "test10"}
+
+```
