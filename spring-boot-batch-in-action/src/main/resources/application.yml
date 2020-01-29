@@ -21,7 +21,7 @@ spring:
       names: ${job.name:NONE}
 
 search:
-  es-host: localhost
+  es-host: 10.100.0.129
   es-port: 9200
 
 logging:

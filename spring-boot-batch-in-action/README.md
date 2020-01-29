@@ -67,6 +67,7 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 - Job내부에서 수행될 1개의 Step
 
 - Tasklet에 Step에서 수행할 기능으로 써 2가지의 형태가 존재
+
   - User 커스텀
   - Reader & Processor & Writer(RPW)가 한 묶음으로 존재
 
@@ -116,7 +117,6 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 1. **BATCH_JOB_INSTANCE**
    1. job이 실행 되는 단위
    2. job의 name/key/version 등의 정보를 가지고 있습니다
-   
 2. **BATCH_JOB_EXCUTION_PARAMS**
    1. job과 1:1의 관계를 갖는 parameters 입니다
    2. job과 1:1의 속성때문에 param이 다르면 job_instance가 새롭게 생성됩니다
@@ -356,7 +356,7 @@ public class JobSecondConfig {
 
 ## JobParameter & Scope
 
-*Barch Component에서 사용할 수 있게 지원되는 파라미터*
+*Barch Component에서 사용할 수 있게 지원되는 파라미터*  
 
 
 
@@ -366,12 +366,12 @@ public class JobSecondConfig {
 
 
 
-**JobParameter Scope**
+**JobParameter Scope**  
 
-1. JobScope : Step사용시 사용
-2. StepScope : Tasklet 사용시 사용
+1. JobScope : Step 사용시 사용  
+2. StepScope : Tasklet 사용시 사용  
 
-`Double`,`Long`,`Date`,`String` 형식만을 지원합니다
+`Double`,`Long`,`Date`,`String` 형식만을 지원합니다  
 
 
 
@@ -451,32 +451,32 @@ public class JobParameterConfig {
 
 
 
-<span class='code_header'>**Job Parameter Bean**</span>
+<span class='code_header'>**Job Parameter Bean**</span>  
 
-![Jobparameter Bean](./assets/jobparameter.PNG)
-
-
-
-<span class='code_header'>**Job Tasklet**</span>
-
-![Jobparameter Component](./assets/jobparameter-component.PNG)
+![Jobparameter Bean](./assets/jobparameter.PNG)  
 
 
 
-<span class='code_header'>**Result**</span>
+<span class='code_header'>**Job Tasklet**</span>  
 
-![Jobparameter Component Result](./assets/jobparameter-component-complete.PNG)
+![Jobparameter Component](./assets/jobparameter-component.PNG)  
 
 
 
-만약 `@StepScope`가 없는 Bean에  Jobparameter를 지정하게 되면 `생성시점` 때문에  <span class='red_font'>error</span>가 납니다
+<span class='code_header'>**Result**</span>  
 
-![Jobparameter Error](./assets/jobparameter-component-fail.PNG) 
+![Jobparameter Component Result](./assets/jobparameter-component-complete.PNG)  
+
+
+
+만약 `@StepScope`가 없는 Bean에  Jobparameter를 지정하게 되면 `생성시점` 때문에  <span class='red_font'>error</span>가 납니다  
+
+![Jobparameter Error](./assets/jobparameter-component-fail.PNG)   
 
 
 
 #### JobParameter를 사용하는 이유  
-1. Late Binding (Command Line실행외의 다른 실행이 어려워 진다)  
+1. Late Binding (Command Line실행외의 다른 실행이 어려워 진다)    
    *다음과 같이 동적 parameter의 대한 대응을 할 수 없습니다*  
 
    ```java
@@ -518,10 +518,73 @@ public class JobParameterConfig {
    ![Parameter Exist Error](./assets/parameter-exist.PNG)  
 
 
+
+#### @Bean과 @StepScope를 같이 사용할 때 주의사항
+
+[기억보단 기록을 블로그의 StepScope 사용시 주의사항](https://jojoldu.tistory.com/132)을 정리해서 요약했습니다  
+Spring Batch에서 ItemReader를 구현시 `@Bean`을 사용해서 구현하곤 합니다  
+문제는 `@Bean`과 JobParameter를 같이 써야 하면서 `@StepScope`를 같이 추가하면서 일어납니다  
+
+```java
+
+@Bean
+@StepScope
+public ItemReader<Test> reader(@Value("#{jobParameters[parameter]}") String parameter){
+
+    ......
+
+    JpaPagingItemReader<Test> reader = new JpaPagingItemReader<>();
+    
+    ......
+    
+    return reader;
+}
+
+```
+해당 코드와 같이 사용하고 일반적으로 `JpaPagingItemReader`를 사용하게 되면 `ItemStream` 인터페이스를 가지고 있지 않아서 <span class='red_font'>Error</span>가 납니다  
+이유인 즉 `@StepScope`가 선언됨에 따라 Bean이 `Proxy`로 설정 되면서 실제 생성한것과 다르게 *ItemReader로 return 되기 때문입니다*  
+
+```java
+@Scope(value = "step", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface StepScope {}
+```
+
+Scope의 관해서 자세히 알고 싶으시면 제 블로그의 다른 글 :point_right: [Spring Scope의 관해서](https://renuevo.github.io/spring/scope/spring-scope/)을 확인 하시기 바랍니다  
+
+---
+## ItemReader  
+
+
+```java
+
+public interface ItemReader<T> {
+    T read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException;
+} 
+
+```
+
+
+
+
+---
+## ItemWriter  
+
+
+
+
+
 ---
 
+## Elastic Reader And Writer  
+이번엔 Elastic과 Spring Batch를 같이 쓰는 방법을 알아 보겠습니다  
+저는 spring-data-elasticsearch를 사용하지 않고 elastic-rest-client를 사용해서 구현하였습니다  
+`spring-data-elasticsearch`를 사용하시는 분은 해당 [Github](https://github.com/spring-projects/spring-batch-extensions/tree/master/spring-batch-elasticsearch)을 참고해 주시기 바랍니다  
 
-### Elastic Test Data Bulk
+<br/>
+
+#### Elastic Test Data Bulk  
 
 **<span class='sub_header'>Test Index Mapping Json</span>**  
 ```json
@@ -557,6 +620,7 @@ PUT reader_test
 <br/>
 
 **<span class='sub_header'>Test Data Bulk</span>**  
+
 ```json
 
 POST reader_test/doc/_bulk
@@ -582,3 +646,29 @@ POST reader_test/doc/_bulk
 {"key": 10,"name": "test10"}
 
 ```
+
+![elastic-reader-data](./assets/elastic-reader-data.png)
+
+일단 테스트 데이터 부터 생성해 줍니다  
+그리고 Spring Batch에서 사용할 Reader를 구현하기 위해서는 ItemReader만 구현해 주면 됩니다  
+
+
+
+
+---
+
+
+
+---
+
+
+
+
+---
+
+
+
+[Spring Batch Doc](https://docs.spring.io/spring-batch/docs/current/reference/html/index.html)   
+[기억보단 기록을](https://jojoldu.tistory.com/)   
+[구피개발일기](https://wckhg89.github.io/archivers/springbatch1)  
+[티몬의 개발이야기](http://blog.naver.com/PostView.nhn?blogId=tmondev&logNo=220772936562&categoryNo=6&parentCategoryNo=0&viewDate=&currentPage=1&postListTopCurrentPage=1&from=postView&userTopListOpen=true&userTopListCount=30&userTopListManageOpen=false&userTopListCurrentPage=1)  

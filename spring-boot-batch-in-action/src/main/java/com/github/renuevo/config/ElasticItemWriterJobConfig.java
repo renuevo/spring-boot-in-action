@@ -29,7 +29,7 @@ public class ElasticItemWriterJobConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final RestHighLevelClient restHighLevelClient;
 
-    private final static int chunkSize = 2;
+    private static final int chunkSize = 2;
 
     @Bean
     public Job elasticItemWriterJob() {
