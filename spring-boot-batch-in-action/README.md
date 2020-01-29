@@ -3,7 +3,6 @@
 *Batch 를 통한 일괄처리*
 
 
-
 ***Spring Batch의 특성***
 
 1. 자동화 - 개입 없이 `자동 실행`
@@ -12,7 +11,8 @@
 4. 성능 - 처리 완료와 독립적 수행의 대한 `퍼포먼스` 확보
 
 ***Spring의 DI,AOP,서비스 + [Accenture](https://www.accenture.com/us-en)의 Batch 노하우***
-
+이 포스팅 정리는 [기억보단 기록을](https://jojoldu.tistory.com/)님의 Spring Batch가이드를 토대로 작성 되었습니다  
+해당 포스팅의 모든 소스는 [Github](https://github.com/renuevo/spring-boot-in-action)에서 확인하실 수 있습니다  
 
 
 ------
@@ -554,6 +554,104 @@ public @interface StepScope {}
 Scope의 관해서 자세히 알고 싶으시면 제 블로그의 다른 글 :point_right: [Spring Scope의 관해서](https://renuevo.github.io/spring/scope/spring-scope/)을 확인 하시기 바랍니다  
 
 ---
+## Chunk 지향 처리  
+Spring Batch의 가장 큰 장점 중 하나는 `Chunk` 지향 처리입니다  
+`Chunk`지향처리란 **한 번에 하나씩의 데이터를 읽어 Chunk라는 덩어리를 만든 뒤, Chunk 단위로 트랜잭션**을 다루는 것을 의미합니다  
+그래서 트랜잭션을 수행시 `Chunk`단위로 수행하기 때문에 Chunk 만큼만 롤백 됩니다  
+
+![chunk-oriented processing](./assets/chunk-oriented-processing.png)  
+<span class='img_caption'> Source : [Spring Batch Docs Chunk-oriented](https://docs.spring.io/spring-batch/docs/4.0.x/reference/html/index-single.html#chunkOrientedProcessing)</span>
+
+위의 그림은 Spring Batch에서 Item단위로 처리 프로세스가 어떻게 이루어지는지 나타냅니다  
+**ItemReader와 ItemProcessor를 처리한뒤 마지막에 ItemWriter으로 전달 합니다** 
+
+<br/> 
+
+![spring batch chunk](./assets/spring-batch-chunk.png)  
+<span class='img_caption'> Source : [기억보단 기록을 Chunk 지향처리](https://jojoldu.tistory.com/331)</span>
+위의 그림은 이해를 돕기 위한 그림입니다  
+**Reader와 Processor가 Item을 1건씩 처리하고 Chunk단위 만큼 처리가 끝나면 Writer쪽으로 전달되어 일괄 처리 됩니다**  
+
+#### Page Size 와 Chunk Size
+Spring Batch에서 일반적으로 Reader로 `PagingItemReader`를 많이들 사용합니다  
+일반적으로 Page Size와 Chunk Size를 같은 의미로 생각하는데  
+**Page Size와 Chunk Size는 서로 의미하는 바가 다릅니다**  
+**1. Chunk Size는 한번에 처리될 트랜잭션 단위**  
+**2. Page Size는 한번에 조회할 Item의 양**  
+
+<br/>
+
+아래 코드로 ItemReader에서 Read가 이루어지는 경우를 한눈에 볼 수 있습니다  
+```java
+
+	@Override
+	protected T doRead() throws Exception {
+
+		synchronized (lock) {
+            
+            //results가 없거나, index가 pageSize를 초과한 경우
+			if (results == null || current >= pageSize) {
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("Reading page " + getPage());
+				}
+            
+				//신규 Item을 읽어서 results list에 추가한다
+				doReadPage();
+				page++;
+				if (current >= pageSize) {
+					current = 0;
+				}
+
+			}
+
+			int next = current++;
+			if (next < results.size()) {
+				return results.get(next);
+			}
+			else {
+				return null;
+			}
+
+		}
+
+	}
+
+```
+다음과 같이 Read는 `Page Size` 단위로 이루어지며 **쿼리 실행시 Page의 Size를 지정하기 위한 용도**입니다  
+**Chunk는 Item이 처리되는 단위**이며 이 때문에 **Chunk Size와 Page Size가 다를 경우 불필요한 Read가 발생할 수 있습니다**
+
+<br/>
+
+`즉 Chunk Size가 Page Size보다 클경우 Chunk Size를 만족할 만큼의 Page Read가 이루어 집니다`
+
+<br/>
+
+그래서 JpaPagingItemReader에서는 다음과 같이 주석으로 알려주고 있습니다  
+
+```java
+/*
+ * <p>
+ * Setting a fairly large page size and using a commit interval that matches the
+ * page size should provide better performance.
+ * </p>
+ */
+
+public class JpaPagingItemReader<T> extends AbstractPagingItemReader<T> {
+    ......
+}
+```
+
+```textbox
+상당히 큰 페이지 크기를 설정하고 페이지 크기와 일치하는 커미트 간격을 사용하면 성능이 향상됩니다
+```
+
+**즉 Chunk Size와 Page Size를 일치 시키는게 보편적으로 좋은 방법입니다**
+
+* JPA에서의 영속성 컨텍스트가 깨지는 문제도 있을 수 있다고 합니다  
+관련 정리 :point_right: [영속성 컨텍스트 문제](https://jojoldu.tistory.com/146)
+
+---
 ## ItemReader  
 
 
@@ -656,11 +754,11 @@ POST reader_test/doc/_bulk
 
 
 ---
-
+## ItemProcessor  
 
 
 ---
-
+## Spring Batch Test  
 
 
 
