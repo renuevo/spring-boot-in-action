@@ -10,8 +10,7 @@
 3. 신뢰성 -  이슈 처리를 추적 할 `로깅/알림` 기능
 4. 성능 - 처리 완료와 독립적 수행의 대한 `퍼포먼스` 확보
 
-***Spring의 DI,AOP,서비스 + [Accenture](https://www.accenture.com/us-en)의 Batch 노하우***
-이 포스팅 정리는 [기억보단 기록을](https://jojoldu.tistory.com/)님의 Spring Batch가이드를 토대로 작성 되었습니다  
+***Spring의 DI,AOP,서비스 + [Accenture](https://www.accenture.com/us-en)의 Batch 노하우***  
 해당 포스팅의 모든 소스는 [Github](https://github.com/renuevo/spring-boot-in-action)에서 확인하실 수 있습니다  
 
 
@@ -84,7 +83,21 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
   ```
 
   
+**파라미터로 Job 실행 지정하기**
 
+```yaml
+spring:
+  batch:
+    job:
+      names: ${job.name:NONE}
+
+```
+
+원하는 job을 외부 파라미터로 실행할 경우 다음과 같이 properties로 지정해 준다음 program argument 파라미터를 지정해 주시면 됩니다  
+예를 들어 **jpaItemListWriterJob** 이라는 job을 실행하고 싶을 경우 다음과 같이 해주시면 됩니다  
+```
+program argument : --job.name=jpaItemListWriterJob
+```
 
 
 ------
@@ -114,10 +127,10 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 
 
 
-1. **BATCH_JOB_INSTANCE**
+1. **BATCH\_JOB\_INSTANCE**
    1. job이 실행 되는 단위
    2. job의 name/key/version 등의 정보를 가지고 있습니다
-2. **BATCH_JOB_EXCUTION_PARAMS**
+2. **BATCH\_JOB\_EXCUTION_PARAMS**
    1. job과 1:1의 관계를 갖는 parameters 입니다
    2. job과 1:1의 속성때문에 param이 다르면 job_instance가 새롭게 생성됩니다
    3. Map타입으로 지정데이터를 job에 넘길 수 있습니다
@@ -167,9 +180,9 @@ Ibatis 모듈은 현재 삭재 되었고 JDBC ItemReader로 교체를 추천
 
 
 
-3. **BATCH_JOB_EXECUTION**
+3. **BATCH\_JOB\_EXECUTION**
 
-   1. batch_job_instance와 대응되면서 `성공/실패` 내역을 갖고 있습니다
+   1. batch\_job\_instance와 대응되면서 `성공/실패` 내역을 갖고 있습니다
    2. process는 해당 table을 조회해서 재수행이 필요한 job만 처리 합니다
 
    ![BATCH_JOB_EXECUTION](./assets/job-completed.PNG)
@@ -291,11 +304,11 @@ public class JobSecondConfig {
 
 ![Standard Flow](./assets/job-step.PNG)
 
-<span class='img_caption'>Standard  Flow</span>
+<span class='img_caption'>Standard Flow</span>
 
 
 
-**BATCH_STEP_EXECUTION**
+**BATCH\_STEP\_EXECUTION**
 
 *각각의 Step에 대한 성공 실패 여부가 기록됩니다*
 
@@ -313,7 +326,7 @@ public class JobSecondConfig {
 
 
 
-#### JobExecutionDecider 를 통한 Flow 처리
+### JobExecutionDecider 를 통한 Flow 처리
 
 ```java
    	@Bean
@@ -373,6 +386,10 @@ public class JobSecondConfig {
 
 `Double`,`Long`,`Date`,`String` 형식만을 지원합니다  
 
+
+```
+program argument : --job.name=jobScope requestDate=20200203
+```
 
 
 ```java
@@ -444,7 +461,7 @@ public class JobParameterConfig {
 
 
 
-#### JobParameter 주의 사항  
+### JobParameter 주의 사항  
 
 1. JobParameter는 `@Value`를 통해서만 값을 할당 받을 수 있습니다  
 2. `@JobScope`와 `@StepScope`로 **Bean**을 생성할때만 Jobparameter가 생성되어 사용 할 수 있습니다  
@@ -475,7 +492,7 @@ public class JobParameterConfig {
 
 
 
-#### JobParameter를 사용하는 이유  
+### JobParameter를 사용하는 이유  
 1. Late Binding (Command Line실행외의 다른 실행이 어려워 진다)    
    *다음과 같이 동적 parameter의 대한 대응을 할 수 없습니다*  
 
@@ -519,7 +536,7 @@ public class JobParameterConfig {
 
 
 
-#### @Bean과 @StepScope를 같이 사용할 때 주의사항
+### @Bean과 @StepScope를 같이 사용할 때 주의사항
 
 [기억보단 기록을 블로그의 StepScope 사용시 주의사항](https://jojoldu.tistory.com/132)을 정리해서 요약했습니다  
 Spring Batch에서 ItemReader를 구현시 `@Bean`을 사용해서 구현하곤 합니다  
@@ -531,11 +548,11 @@ Spring Batch에서 ItemReader를 구현시 `@Bean`을 사용해서 구현하곤 
 @StepScope
 public ItemReader<Test> reader(@Value("#{jobParameters[parameter]}") String parameter){
 
-    ......
+    ...
 
     JpaPagingItemReader<Test> reader = new JpaPagingItemReader<>();
     
-    ......
+    ...
     
     return reader;
 }
@@ -568,14 +585,17 @@ Spring Batch의 가장 큰 장점 중 하나는 `Chunk` 지향 처리입니다
 <br/> 
 
 ![spring batch chunk](./assets/spring-batch-chunk.png)  
-<span class='img_caption'> Source : [기억보단 기록을 Chunk 지향처리](https://jojoldu.tistory.com/331)</span>
+<span class='img_caption'> Source : [기억보단 기록을 Chunk 지향처리](https://jojoldu.tistory.com/331)</span>  
 위의 그림은 이해를 돕기 위한 그림입니다  
 **Reader와 Processor가 Item을 1건씩 처리하고 Chunk단위 만큼 처리가 끝나면 Writer쪽으로 전달되어 일괄 처리 됩니다**  
 
-#### Page Size 와 Chunk Size
+### Page Size 와 Chunk Size  
 Spring Batch에서 일반적으로 Reader로 `PagingItemReader`를 많이들 사용합니다  
-일반적으로 Page Size와 Chunk Size를 같은 의미로 생각하는데  
-**Page Size와 Chunk Size는 서로 의미하는 바가 다릅니다**  
+일반적으로 Page Size와 Chunk Size를 같은 의미로 생각할 수 있습니다  
+**하지만 Page Size와 Chunk Size는 서로 의미하는 바가 다릅니다**  
+
+<br/>
+
 **1. Chunk Size는 한번에 처리될 트랜잭션 단위**  
 **2. Page Size는 한번에 조회할 Item의 양**  
 
@@ -584,38 +604,38 @@ Spring Batch에서 일반적으로 Reader로 `PagingItemReader`를 많이들 사
 아래 코드로 ItemReader에서 Read가 이루어지는 경우를 한눈에 볼 수 있습니다  
 ```java
 
-	@Override
-	protected T doRead() throws Exception {
+@Override
+protected T doRead() throws Exception {
 
-		synchronized (lock) {
-            
-            //results가 없거나, index가 pageSize를 초과한 경우
-			if (results == null || current >= pageSize) {
+    synchronized (lock) {
+        
+        //results가 없거나, index가 pageSize를 초과한 경우
+        if (results == null || current >= pageSize) {
 
-				if (logger.isDebugEnabled()) {
-					logger.debug("Reading page " + getPage());
-				}
-            
-				//신규 Item을 읽어서 results list에 추가한다
-				doReadPage();
-				page++;
-				if (current >= pageSize) {
-					current = 0;
-				}
+            if (logger.isDebugEnabled()) {
+                logger.debug("Reading page " + getPage());
+            }
+        
+            //신규 Item을 읽어서 results list에 추가한다
+            doReadPage();
+            page++;
+            if (current >= pageSize) {
+                current = 0;
+            }
 
-			}
+        }
 
-			int next = current++;
-			if (next < results.size()) {
-				return results.get(next);
-			}
-			else {
-				return null;
-			}
+        int next = current++;
+        if (next < results.size()) {
+            return results.get(next);
+        }
+        else {
+            return null;
+        }
 
-		}
+    }
 
-	}
+}
 
 ```
 다음과 같이 Read는 `Page Size` 단위로 이루어지며 **쿼리 실행시 Page의 Size를 지정하기 위한 용도**입니다  
@@ -638,7 +658,7 @@ Spring Batch에서 일반적으로 Reader로 `PagingItemReader`를 많이들 사
  */
 
 public class JpaPagingItemReader<T> extends AbstractPagingItemReader<T> {
-    ......
+    ...
 }
 ```
 
@@ -651,8 +671,24 @@ public class JpaPagingItemReader<T> extends AbstractPagingItemReader<T> {
 * JPA에서의 영속성 컨텍스트가 깨지는 문제도 있을 수 있다고 합니다  
 관련 정리 :point_right: [영속성 컨텍스트 문제](https://jojoldu.tistory.com/146)
 
+<br/>
+
 ---
+
+앞서 본것과 같이 Chunk 지향처리 `3가지`의 구성요소로 이루어져 있습니다  
+
+1. ItemReader  
+2. ItemProcessor  
+3. ItemWriter  
+
+지금부터 이 3가지 요소의 대해 알아보도록 하겠습니다  
+
 ## ItemReader  
+
+Data -> ItemReader -> ItemProcessor -> ItemWriter -> Data
+`ItemReader`는 데이터를 읽어 들이는 역할을 합니다  
+Spring Batch에서는 다양한 데이터를 읽어 올 수 있도록 기본적인 구현체를 제공하고 있습니다  
+또한  사용자 개인이 커스텀하여 다양한 형태의 데이터도 읽어 올 수 있도록 확장성도 열어 두었습니다  
 
 
 ```java
@@ -682,7 +718,7 @@ public interface ItemReader<T> {
 
 <br/>
 
-#### Elastic Test Data Bulk  
+### Elastic Test Data Bulk  
 
 **<span class='sub_header'>Test Index Mapping Json</span>**  
 ```json
@@ -763,10 +799,18 @@ POST reader_test/doc/_bulk
 
 
 ---
+## Spring Batch Partitioner
+
+
+---
+## Spring Batch Exception Handling
+
+---
 
 
 
 [Spring Batch Doc](https://docs.spring.io/spring-batch/docs/current/reference/html/index.html)   
+[Spring Batch Guideline](https://terasoluna-batch.github.io/guideline/5.0.0.RELEASE/en/Ch02_SpringBatchArchitecture.html)
 [기억보단 기록을](https://jojoldu.tistory.com/)   
 [구피개발일기](https://wckhg89.github.io/archivers/springbatch1)  
 [티몬의 개발이야기](http://blog.naver.com/PostView.nhn?blogId=tmondev&logNo=220772936562&categoryNo=6&parentCategoryNo=0&viewDate=&currentPage=1&postListTopCurrentPage=1&from=postView&userTopListOpen=true&userTopListCount=30&userTopListManageOpen=false&userTopListCurrentPage=1)  

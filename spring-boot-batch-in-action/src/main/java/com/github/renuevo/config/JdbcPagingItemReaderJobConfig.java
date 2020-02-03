@@ -4,7 +4,6 @@ import com.github.renuevo.entity.Pay;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.QueryProducer;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
