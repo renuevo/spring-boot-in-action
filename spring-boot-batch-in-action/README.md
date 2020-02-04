@@ -112,7 +112,7 @@ Task는 기본적인 **사용자 정의 형식**과 **read / process / write (RP
 
 **파라미터로 Job 실행 지정하기**
 
-Spring Batch는 자체적으로 스케줄 처리를 하지 기능이 없습니다  
+Spring Batch는 자체적으로 스케줄 처리를 하는 기능이 없습니다  
 그래서 외부에서 Crontab / Jenkins 등을 사용해서 Job을 실행하게 됩니다  
 이때 program argument를 통해 job name을 전달해서 원하는 job을 실행 하실 수 있습니다  
 
