@@ -785,7 +785,9 @@ public class JpaPagingItemReader<T> extends AbstractPagingItemReader<T> {
 Spring Batch에서는 다양한 데이터를 읽어 올 수 있도록 기본적인 구현체를 제공하고 있습니다  
 또한  사용자 개인이 커스텀하여 다양한 형태의 데이터도 읽어 올 수 있도록 확장성도 열어 두었습니다  
 
+<br/>
 
+먼저 가장 기본적인 SpringBatch의 ItemReader인 `JdbcPagingItemReader` 살펴 보겠습니다  
 ![JdbcPaingItemReader UML_1](./assets/JdbcPagingItemReader-1.png)  
 
 
