@@ -773,10 +773,23 @@ public class JpaPagingItemReader<T> extends AbstractPagingItemReader<T> {
 
 ## ItemReader  
 
-Data -> ItemReader -> ItemProcessor -> ItemWriter -> Data
-`ItemReader`는 데이터를 읽어 들이는 역할을 합니다  
+기본적으로 Spring Batch는 다음과 같은 흐름으로 많이 사용합니다  
+
+<br/>
+
+**Data -> ItemReader -> ItemProcessor -> ItemWriter -> Data**
+
+<br/>
+
+여기서 `ItemReader`는 데이터를 읽어 들이는 역할을 합니다  
 Spring Batch에서는 다양한 데이터를 읽어 올 수 있도록 기본적인 구현체를 제공하고 있습니다  
 또한  사용자 개인이 커스텀하여 다양한 형태의 데이터도 읽어 올 수 있도록 확장성도 열어 두었습니다  
+
+
+![JdbcPaingItemReader UML_1](./assets/JdbcPagingItemReader-1.png)  
+
+
+![JdbcPaingItemReader UML_2](./assets/JdbcPagingItemReader-2.png)  
 
 
 ```java
