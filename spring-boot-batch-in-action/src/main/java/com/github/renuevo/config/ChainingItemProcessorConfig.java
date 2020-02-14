@@ -22,6 +22,15 @@ import org.springframework.context.annotation.Configuration;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
+
+/**
+ * <pre>
+ * @className : ChainingItemProcessorConfig
+ * @author : Deokhwa.Kim
+ * @since : 2020-01-08
+ * @summary : Multi ItemProcessor Step Example
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor
