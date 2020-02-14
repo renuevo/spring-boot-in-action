@@ -16,6 +16,14 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * <pre>
+ * @className : ElasticItemReaderJobConfig
+ * @author : Deokhwa.Kim
+ * @since : 2020-01-03
+ * @summary : Elastic Item Reader Example
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor

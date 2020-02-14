@@ -17,6 +17,14 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.EntityManagerFactory;
 
+/**
+ * <pre>
+ * @className : JpaItemWriterJobConfig
+ * @author : Deokhwa.Kim
+ * @since : 2020-02-14
+ * @summary : Jpa Item Writer Example
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor

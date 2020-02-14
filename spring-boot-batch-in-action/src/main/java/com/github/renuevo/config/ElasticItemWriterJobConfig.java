@@ -20,6 +20,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
+/**
+ * <pre>
+ * @className : ElasticItemWriterJobConfig
+ * @author : Deokhwa.Kim
+ * @since : 2020-01-06
+ * @summary : Elastic Item Writer Example
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor

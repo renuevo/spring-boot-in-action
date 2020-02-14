@@ -21,6 +21,15 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import javax.sql.DataSource;
 import java.util.Map;
 
+
+/**
+ * <pre>
+ * @className : JdbcPagingItemReaderJobConfig
+ * @author : Deokhwa.Kim
+ * @since : 2019-12-27
+ * @summary : Jdbc Paging Item Reader Example
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor

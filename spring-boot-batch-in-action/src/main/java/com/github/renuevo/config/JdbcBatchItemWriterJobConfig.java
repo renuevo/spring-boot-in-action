@@ -17,6 +17,14 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import javax.sql.DataSource;
 
+/**
+ * <pre>
+ * @className : JdbcBatchItemWriterJobConfig
+ * @author : Deokhwa.Kim
+ * @since : 2020-12-29
+ * @summary : Jdbc Item Writer Example
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor

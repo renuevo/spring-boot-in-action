@@ -15,6 +15,14 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.EntityManagerFactory;
 
+/**
+ * <pre>
+ * @className : JpaPagingItemReaderJobConfig
+ * @author : Deokhwa.Kim
+ * @since : 2019-12-28
+ * @summary : Jpa Paging Item Reader
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor

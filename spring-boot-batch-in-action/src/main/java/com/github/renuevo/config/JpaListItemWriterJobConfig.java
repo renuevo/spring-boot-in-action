@@ -11,7 +11,6 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
@@ -21,6 +20,14 @@ import org.springframework.context.annotation.Configuration;
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
+/**
+ * <pre>
+ * @className : JpaListItemWriterJobConfig
+ * @author : Deokhwa.Kim
+ * @since : 2020-01-01
+ * @summary : Jpa Item List Writer
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor

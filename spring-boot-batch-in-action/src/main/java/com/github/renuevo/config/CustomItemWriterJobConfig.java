@@ -18,6 +18,15 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.EntityManagerFactory;
 
+
+/**
+ * <pre>
+ * @className : CustomItemWriterJobConfig
+ * @author : Deokhwa.Kim
+ * @since : 2019-12-31
+ * @summary : Custom Item Writer And ItemProcessor Data Transform Example
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor

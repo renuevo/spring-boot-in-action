@@ -17,6 +17,14 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * <pre>
+ * @className : ElasticRestClientConfig
+ * @author : Deokhwa.Kim
+ * @since : 2020-01-03
+ * @summary : Elastic Rest Client Configuration
+ * </pre>
+ */
 @Configuration
 @NoArgsConstructor
 public class ElasticRestClientConfig {

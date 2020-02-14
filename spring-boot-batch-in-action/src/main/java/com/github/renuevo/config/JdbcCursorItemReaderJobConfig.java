@@ -4,8 +4,6 @@ import com.github.renuevo.entity.Pay;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -19,6 +17,14 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import javax.sql.DataSource;
 
+/**
+ * <pre>
+ * @className : JdbcCursorItemReaderJobConfig
+ * @author : Deokhwa.Kim
+ * @since : 2019-12-25
+ * @summary : Jdbc Cursor Item Reader Example
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor

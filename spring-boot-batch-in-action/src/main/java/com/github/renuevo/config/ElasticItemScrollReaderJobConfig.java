@@ -1,6 +1,5 @@
 package com.github.renuevo.config;
 
-import com.github.renuevo.reader.ElasticItemReader;
 import com.github.renuevo.reader.ElasticItemScrollReader;
 import com.github.renuevo.vo.ElasticReaderTestVo;
 import lombok.AllArgsConstructor;
@@ -16,6 +15,14 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * <pre>
+ * @className : ElasticItemScrollReaderJobConfig
+ * @author : Deokhwa.Kim
+ * @since : 2020-01-05
+ * @summary : Elastic Scroll Item Reader Example
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor

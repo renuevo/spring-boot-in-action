@@ -19,6 +19,14 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.EntityManagerFactory;
 
+/**
+ * <pre>
+ * @className : StepDataShareConfig
+ * @author : Deokhwa.Kim
+ * @since : 2020-01-18
+ * @summary : Step Data Share Example
+ * </pre>
+ */
 @Slf4j
 @Configuration
 @AllArgsConstructor
