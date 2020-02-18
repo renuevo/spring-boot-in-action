@@ -5,7 +5,6 @@ import com.github.renuevo.vo.ElasticReaderTestVo;
 import com.github.renuevo.vo.ElasticWriterTestVo;
 import com.github.renuevo.writer.ElasticItemWriter;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;

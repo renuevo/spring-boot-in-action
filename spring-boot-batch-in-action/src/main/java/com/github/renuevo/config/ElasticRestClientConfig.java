@@ -1,7 +1,6 @@
 package com.github.renuevo.config;
 
 import com.google.common.collect.Lists;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;

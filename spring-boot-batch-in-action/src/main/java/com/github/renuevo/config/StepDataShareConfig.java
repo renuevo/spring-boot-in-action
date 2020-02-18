@@ -4,7 +4,6 @@ package com.github.renuevo.config;
 import com.github.renuevo.data.StepShareData;
 import com.github.renuevo.entity.Pay;
 import com.github.renuevo.entity.Pay2;
-import com.github.renuevo.entity.Tax;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
