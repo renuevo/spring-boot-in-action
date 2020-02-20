@@ -1,6 +1,6 @@
 
 ext{
-    springCloudVersion = 'Finchley.RELEASE'
+    set('springCloudVersion', "Greenwich.RELEASE")
 }
 
 dependencyManagement {
