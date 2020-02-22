@@ -787,12 +787,18 @@ Spring Batch에서는 다양한 데이터를 읽어 올 수 있도록 기본적�
 
 <br/>
 
-먼저 가장 기본적인 SpringBatch의 ItemReader인 `JdbcPagingItemReader` 살펴 보겠습니다  
+### ItemReader의 기본 구성
+
+먼저 가장 기본적인 SpringBatch의 ItemReader인 `JdbcPagingItemReader` 살펴 보며 ItemReader의 구조를 알아 보겠습니다  
 ![JdbcPaingItemReader UML_1](./assets/JdbcPagingItemReader-1.png)  
 
+보시는 것과 같이 `JdbcPagingItemReader`는 여러 Class와 Interface를 상속받아 구현되어 있습니다  
+여기서 눈여겨 볼것은 상위에 위치되어 있는 `ItemStream`와 `ItemReader` 인터페이스입니다  
 
-![JdbcPaingItemReader UML_2](./assets/JdbcPagingItemReader-2.png)  
+![JdbcPaingItemReader UML_2](./assets/JdbcPagingItemReader-2.png)   
 
+
+먼저 2개의 인터페이스중 ItemReader를 먼저 살펴 보겠습니다  
 
 ```java
 
@@ -802,8 +808,51 @@ public interface ItemReader<T> {
 
 ```
 
+ItemReader는 Step에서 요구하는 필수적인 인터페이스입니다  
+내부도 간단하게 Step에서 사용할 데이터를 가져오는 Read에 대한 역할에 충실하고 있습니다  
+
+Step은 이런 ItemReader를 받아와서 데이터 Reader 업무를 수행합니다  
+
+```java
+
+public SimpleStepBuilder<I, O> reader(ItemReader<? extends I> reader) {
+    this.reader = reader;
+    return this;
+}   
+
+```
+
+사용자 지정 Reader를  ItemReader를 구현할때 상속받아 구현하시면 됩니다  
+
+<br/>
+
+다음은 ItemStream 입니다  
+구성은 다음과 같이 3가지의 메소드를 가지고 있습니다  
+```java
+
+public interface ItemStream {
+
+	void open(ExecutionContext executionContext) throws ItemStreamException;
+
+	void update(ExecutionContext executionContext) throws ItemStreamException;
+
+	void close() throws ItemStreamException;
+}
+
+```
+
+ItemStream은 주기적으로 상태를 업데이트하고 오류가 발생하면 복원상태를 확인 가능하게 합니다  
+open과 close는 Stream에 열고 닫음을 설정합니다  
+update는 상태를 주기적으로 업데이트 하는 역할을 담당합니다  
+
+<br/>
 
 
+기본 구성은 다음과 같고 다음으로 Spring Batch에서 제공하는 기본적인 ItemReader들과 커스텀 구현을 알아 보도록 하겠습니다  
+
+<br/>
+ 
+### Spring Batch의 ItemReader
 
 ---
 ## ItemWriter  
