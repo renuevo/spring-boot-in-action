@@ -864,7 +864,7 @@ Spring Batch에서 제공하는 ItemReader는 2가지의 유형으로 나눠서 
 
 #### File Reader  
 
-**txt 파일 ItemReader**
+**1. Txt 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/TxtFileItemReaderJobConfig.java)  
 txt 파일의 아이템 Reader는 **FlatFileItemReader**를 통해 Read 할 수 있습니다  
 
 ```java
@@ -898,7 +898,123 @@ LineMapper는 2가지의 파라미터를 받게 되는데 line은 한줄의 데�
 
 <br/>
 
-**csv 파일 ItemReader**
+**2. Csv 파일 ItemReader**  :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/CsvFileItemReaderJobConfig.java)  
+
+Csv파일도 txt파일을 읽어오는것과 별반 다르지 않습니다  
+FlatFileItemReader를 통해서 LineMapper만 수정해서 받아오면 됩니다  
+
+```java
+
+@Bean
+public FlatFileItemReader<CsvItemVo> csvFileItemReader() {
+    FlatFileItemReader<CsvItemVo> flatFileItemReader = new FlatFileItemReader<>();
+    flatFileItemReader.setResource(new ClassPathResource("/sample_data.csv"));
+    flatFileItemReader.setLinesToSkip(1);  /* highlight-line */    
+
+    DefaultLineMapper<CsvItemVo> defaultLineMapper = new DefaultLineMapper<>();  /* highlight-line */  
+
+    DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer();
+    delimitedLineTokenizer.setNames("number","item");
+
+    BeanWrapperFieldSetMapper<CsvItemVo> beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper<>();
+    beanWrapperFieldSetMapper.setTargetType(CsvItemVo.class);
+
+    defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
+    defaultLineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
+
+    flatFileItemReader.setLineMapper(defaultLineMapper);  /* highlight-line */  
+    return flatFileItemReader;
+}
+
+```
+
+예제에서는 flatFileItemReader에 setLinesToSkip을 설정해서 Header라인인 첫라인을 무시했습니다  
+그리고 DefaultLineMapper를 통해서 Csv파일을 Vo Class로 바인딩 해줍니다  
+내부적으로 DefaultLineMapper는 mapLine을 통해서 데이터를 Mapping 합니다  
+
+```java
+
+    @Override
+	public T mapLine(String line, int lineNumber) throws Exception {
+		return fieldSetMapper.mapFieldSet(tokenizer.tokenize(line));   /* highlight-line */    
+	}
+
+```
+
+위에 소스를 보시면 Tokenizer를 통해 Line을 분류하고 MapfieldSet을 통해 데이터를 바인딩하는것을 알 수 있습니다  
+그래서 **DelimitedLineTokenizer에 Tokenizer와 FieldSetMapper를 설정해 주어야 합니다**  
+
+<br/>
+
+Tokenizer부터 살펴보겠습니다    
+Tokenizer는 DelimitedLineTokenizer를 사용했습니다   
+setNames를 통해 각각의 데이터의 이름만을 설정해주고 사용하였습니다  
+DelimitedLineTokenizer는 기본적으로 `,`를 구분가로 가지고 있어서 Csv를 Read할 경우 바로 사용 가능합니다  
+만약 다른 구분자가 다른 데이터를 가지고 올 경우에는 setDelimiter로 변경 가능합니다  
+
+```java
+
+public class DelimitedLineTokenizer extends AbstractLineTokenizer implements InitializingBean {
+    
+    ...
+
+	public static final String DELIMITER_COMMA = ",";  /* highlight-line */    
+
+	public DelimitedLineTokenizer() {
+		this(DELIMITER_COMMA);
+	}
+
+	public void setDelimiter(String delimiter) {  /* highlight-line */    
+		this.delimiter = delimiter;
+	}
+
+    ...
+}
+
+```
+
+다음으로 FieldSetMapper입니다  
+FieldSetMapper는 Tokenizer에서 가지고온 데이터들을 Vo로 바인드하는 역할을 합니다  
+기본적인 BeanWrapperFieldSetMapper을 사용하였고 setTargetType을 통해 class를 넘겨주면
+내부에서 newInstance를 통해 객체를 생성해서 데이터를 바인드하고 return 합니다   
+
+<br/>
+
+이 두개의 기능을 DefaultLineMapper을 통해서 FlatFileItemReader에 전달하면 간편하게 Csv를 읽을 수 있습니다  
+
+~~이들을 활용하면 왠만한 File들은 전부 쉽게 읽을 수 있습니다~~
+
+마지막으로 위의 소스들은 익명클래스를 활용해서 간단하게 구현도 가능합니다  
+
+```java
+
+@Bean
+public FlatFileItemReader<CsvItemVo> csvFileItemReader() {
+    FlatFileItemReader<CsvItemVo> flatFileItemReader = new FlatFileItemReader<>();
+    flatFileItemReader.setResource(new ClassPathResource("/sample_data.csv"));
+    flatFileItemReader.setLinesToSkip(1);
+    flatFileItemReader.setLineMapper(new DefaultLineMapper<>() {
+        {
+            setLineTokenizer(new DelimitedLineTokenizer() {
+                {
+                    setNames("number", "item");
+                }
+            });
+
+            setFieldSetMapper(new BeanWrapperFieldSetMapper<>(){
+                {
+                    setTargetType(CsvItemVo.class);
+                }
+            });
+        }
+    });
+    return flatFileItemReader;
+}
+
+```
+
+
+**3. XML 파일 ItemReader**
 
 
 ---

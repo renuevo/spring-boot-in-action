@@ -54,9 +54,21 @@ public class CsvFileItemReaderJobConfig {
     @Bean
     public FlatFileItemReader<CsvItemVo> csvFileItemReader() {
         FlatFileItemReader<CsvItemVo> flatFileItemReader = new FlatFileItemReader<>();
-        flatFileItemReader.setLinesToSkip(1);
         flatFileItemReader.setResource(new ClassPathResource("/sample_data.csv"));
+        flatFileItemReader.setLinesToSkip(1);
 
+        DefaultLineMapper<CsvItemVo> defaultLineMapper = new DefaultLineMapper<>();
+
+        DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer();
+        delimitedLineTokenizer.setNames("number","item");
+
+        BeanWrapperFieldSetMapper<CsvItemVo> beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        beanWrapperFieldSetMapper.setTargetType(CsvItemVo.class);
+
+        defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
+        defaultLineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
+
+        /*
         flatFileItemReader.setLineMapper(new DefaultLineMapper<>() {
             {
                 setLineTokenizer(new DelimitedLineTokenizer() {
@@ -72,6 +84,8 @@ public class CsvFileItemReaderJobConfig {
                 });
             }
         });
+         */
+        flatFileItemReader.setLineMapper(defaultLineMapper);
         return flatFileItemReader;
     }
 
