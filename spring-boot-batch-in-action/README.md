@@ -808,7 +808,7 @@ public interface ItemReader<T> {
 
 ```
 
-ItemReader는 Step에서 요구하는 필수적인 인터페이스입니다  
+**ItemReader는 Step에서 요구하는 필수적인 인터페이스입니다**  
 내부도 간단하게 Step에서 사용할 데이터를 가져오는 Read에 대한 역할에 충실하고 있습니다  
 
 Step은 이런 ItemReader를 받아와서 데이터 Reader 업무를 수행합니다  
@@ -841,7 +841,7 @@ public interface ItemStream {
 
 ```
 
-ItemStream은 주기적으로 상태를 업데이트하고 오류가 발생하면 복원상태를 확인 가능하게 합니다  
+**ItemStream은 주기적으로 상태를 업데이트하고 오류가 발생하면 복원상태를 확인 가능하게 합니다**  
 open과 close는 Stream에 열고 닫음을 설정합니다  
 update는 상태를 주기적으로 업데이트 하는 역할을 담당합니다  
 
@@ -850,9 +850,56 @@ update는 상태를 주기적으로 업데이트 하는 역할을 담당합니�
 
 기본 구성은 다음과 같고 다음으로 Spring Batch에서 제공하는 기본적인 ItemReader들과 커스텀 구현을 알아 보도록 하겠습니다  
 
+
 <br/>
  
 ### Spring Batch의 ItemReader
+
+Spring Batch에서 제공하는 ItemReader는 2가지의 유형으로 나눠서 설명드리겠습니다  
+
+**1. File 형식의 데이터 Reader (txt, csv, xml, json)**  
+**2. DB접근을 통한 데이터 Reader**  
+
+<br/>
+
+#### File Reader  
+
+**txt 파일 ItemReader**
+txt 파일의 아이템 Reader는 **FlatFileItemReader**를 통해 Read 할 수 있습니다  
+
+```java
+
+@Bean
+public FlatFileItemReader<ItemVo> txtFileItemReader() {
+    FlatFileItemReader<ItemVo> flatFileItemReader = new FlatFileItemReader<>();
+    flatFileItemReader.setResource(new ClassPathResource("/sample.txt"));
+    flatFileItemReader.setLineMapper((line, lineNumber) -> new ItemVo(line));
+    return flatFileItemReader;
+}
+
+```
+
+setResource로 Read할 파일의 Resource를 지정해줍니다  
+그러면 Step에서 Read할때 line으로 데이터를 Read하게 됩니다  
+Read하는 데이터를 내부적으로 LineMapper를 통해 Mapping을 진행하게 되는데,  
+setLineMapper를 통해 Read되는 Line의 데이터를 객체로 만들어서 return 해주면 됩니다  
+
+<br/>
+
+```java
+
+public interface LineMapper<T> {
+	T mapLine(String line, int lineNumber) throws Exception;
+}
+
+```
+LineMapper는 2가지의 파라미터를 받게 되는데 line은 한줄의 데이터를 lineNumber는 해당데이터의 라인번호를 의미합니다  
+이를 토대로 Mapper를 커스텀하게 만들어서 설정 가능합니다  
+
+<br/>
+
+**csv 파일 ItemReader**
+
 
 ---
 ## ItemWriter  
