@@ -3,6 +3,7 @@ package com.github.renuevo.config;
 import com.github.renuevo.vo.CsvItemVo;
 import com.github.renuevo.vo.XmlItemVo;
 import com.google.common.collect.Maps;
+import com.thoughtworks.xstream.XStream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -39,12 +40,15 @@ public class XmlFileItemReaderJobConfig {
         return stepBuilderFactory.get("xmlFileItemReaderStep")
                 .<XmlItemVo, XmlItemVo>chunk(chunkSize)
                 .reader(xmlFileItemReader())
-                .writer(x -> x.forEach(System.out::println))
+                .writer(xmlItemVos -> xmlItemVos
+                        .stream()
+                        .map(XmlItemVo::toString)
+                        .forEach(log::info))
                 .build();
     }
 
     @Bean
-    public StaxEventItemReader xmlFileItemReader() {
+    public StaxEventItemReader<XmlItemVo> xmlFileItemReader() {
         return new StaxEventItemReaderBuilder<XmlItemVo>()
                 .name("xmlFileItemReader")
                 .resource(new ClassPathResource("/sample_xml_data.xml"))
