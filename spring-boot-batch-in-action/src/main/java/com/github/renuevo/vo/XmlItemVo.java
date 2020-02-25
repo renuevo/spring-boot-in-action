@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class XmlItemVo {
     int number;
-    String item;
+    String name;
 }

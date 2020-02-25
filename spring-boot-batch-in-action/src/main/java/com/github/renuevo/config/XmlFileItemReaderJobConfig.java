@@ -56,9 +56,9 @@ public class XmlFileItemReaderJobConfig {
     @Bean
     public XStreamMarshaller itemMarshaller() {
         Map<String, Class<?>> aliases = Maps.newHashMap();
-        aliases.put("items", XmlItemVo.class);
+        aliases.put("item", XmlItemVo.class);
         aliases.put("number", Integer.class);
-        aliases.put("item", String.class);
+        aliases.put("name", String.class);
         XStreamMarshaller xStreamMarshaller = new XStreamMarshaller();
         xStreamMarshaller.setAliases(aliases);
         return xStreamMarshaller;
