@@ -2,18 +2,18 @@
 <items>
     <item id="1">
         <number>1</number>
-        <name>one</name>
+        <data>one</data>
     </item>
     <item id="2">
         <number>2</number>
-        <name>two</name>
+        <data>two</data>
     </item>
     <item id="3">
         <number>3</number>
-        <name>three</name>
+        <data>three</data>
     </item>
     <item id="4">
         <number>4</number>
-        <name>four</name>
+        <data>four</data>
     </item>
 </items>
