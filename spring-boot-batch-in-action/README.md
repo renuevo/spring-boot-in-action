@@ -1013,8 +1013,151 @@ public FlatFileItemReader<CsvItemVo> csvFileItemReader() {
 
 ```
 
+<br/>
 
-**3. XML 파일 ItemReader**
+**3. XML 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/XmlFileItemReaderJobConfig.java)
+
+XML은 앞서 설명드린 FlatFileItemReader와 달리 다른 Class를 사용합니다  
+여기서는 [Spring OXM](https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#oxm)을 통해 XML을 읽는 방법을 소개 합니다  
+
+<br/>
+
+Reader에서 사용할 Sample XML 파일을 준비합니다  
+
+```xml
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<items>
+    <item id="1">
+        <number>1</number>
+        <data>one</data>
+    </item>
+    <item id="2">
+        <number>2</number>
+        <data>two</data>
+    </item>
+    <item id="3">
+        <number>3</number>
+        <data>three</data>
+    </item>
+    <item id="4">
+        <number>4</number>
+        <data>four</data>
+    </item>
+</items>
+
+```
+
+그리고 자신의 버젼에 맞는 의존관계 설정이 필요합니다  
+아래 그림과 간이 `xstream`과 `spring-oxm`을 gradle에 추가해 줍니다  
+```groovy
+dependencies {
+ ...
+ implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.11.1'
+ implementation group: 'org.springframework', name: 'spring-oxm', version: '5.1.10.RELEASE'
+ ...
+}
+
+```
+Spring Boot의 따로 oxm은 없고 Spring 버젼에 맞는 oxm을 가져와서 추가해야 깔끔할겁니다  
+저는 Spring Boot 2.1.9를 사용하고 있고 해당 버젼의 spring-core는 5.1.10으로 oxm도 5.1.10으로 추가해 줬습니다  
+Spring Boot의 Spring 버젼 확인 방법은 아래와 같은 Compile Dependencies를 확인하시면 됩니다  
+
+![Compile Dependencies](./assets/spring-version.PNG)
+
+<br/>
+
+자 그럼 이제 필요한 요건은 모두 갖춰졌습니다  
+이제 XML을 VO로 읽어 보겠습니다  
+Spring Batch에서는 XML을 읽기 위해서 `StaxEventItemReader` Class를 제공합니다  
+
+```java
+
+@Data
+public class XmlItemVo {
+    int number;
+    String data;
+}
+
+```
+VO객체 Class를 정의합니다  
+주의 하실점은 다른곳에서도 사용하는 VO로 생성자를 재정의 할 경우 Default 생성자는 꼭 생성을 해주셔야 합니다  
+다음으로 ItemReader Bean을 정의합니다  
+
+```java
+
+@Bean
+public StaxEventItemReader<XmlItemVo> xmlFileItemReader() {
+    return new StaxEventItemReaderBuilder<XmlItemVo>()
+            .name("xmlFileItemReader")
+            .resource(new ClassPathResource("/sample_xml_data.xml"))
+            .addFragmentRootElements("item")
+            .unmarshaller(itemMarshaller())  /* highlight-line */
+            .build();
+}
+
+```
+
+위의 소스를 한눈의 알아 볼 수 있을정도로 간결합니다  
+그중에서 기존에 spring-oxm을 안접해 보신 분들에게는 `unmarshaller`만 새로운 개념으로 보이실 겁니다  
+unmarshaller는 간단히 말해서 스트림을 객체로 역직렬화하는 것입니다  
+관련 정보의 대해 자세히 알고 싶으신 분들은 [Outsider's Dev Story](https://blog.outsider.ne.kr/891)해당 포스터를 참고해 주시기 바랍니다  
+
+<br/>
+
+itemMarshaller는 역질렬화는 XStreamMarshaller를 통해 간단하게 정의 가능합니다  
+```java
+
+@Bean
+public XStreamMarshaller itemMarshaller() {
+    Map<String, Class<?>> aliases = Maps.newHashMap();
+    aliases.put("item", XmlItemVo.class);
+    aliases.put("number", Integer.class);
+    aliases.put("data", String.class);
+    XStreamMarshaller xStreamMarshaller = new XStreamMarshaller();
+    xStreamMarshaller.setAliases(aliases);
+    return xStreamMarshaller;
+}
+
+```
+각 필드별 자료형을 정의해 주고 setAliases로 넘겨주기만 하면 간단하게 마샬링이 구현가능합니다  
+다음과 같은 구현으로 XML Reader는 구현이 끝났습니다  
+
+하지만 그냥 실행하게 된다면 다음과 같은 경고를 만나실 수 있습니다  
+
+<br/>
+
+<span class='red_font'>Security framework of XStream not initialized, XStream is probably vulnerable</span>
+
+<br/>
+
+해당경고는 XStream이 보안허점이 될수 있으므로 언마샬링 대상을 지정하여 설정하기를 권장하기 때문입니다  
+다음과 같이 보안 설정 파일을 만들어서 해결 가능합니다  
+
+```java
+
+@Configuration
+public class JobSecurityConfig {
+
+    //Security framework of XStream not initialized, XStream is probably vulnerable.
+    //https://stackoverflow.com/questions/49450397/vulnerability-warning-with-xstreammarshaller
+    public JobSecurityConfig(XStreamMarshaller marshaller) {
+        XStream xstream = marshaller.getXStream();
+        XStream.setupDefaultSecurity(xstream);    /* highlight-line */
+        xstream.allowTypes(new Class[]{XmlItemVo.class});
+    }
+
+}
+
+```
+
+<br/>
+
+**4. JSON 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/JsonFileItemReaderJobConfig.java)
+
+
+---
+## ItemProcessor  
 
 
 ---
@@ -1030,6 +1173,7 @@ public FlatFileItemReader<CsvItemVo> csvFileItemReader() {
 이번엔 Elastic과 Spring Batch를 같이 쓰는 방법을 알아 보겠습니다  
 저는 spring-data-elasticsearch를 사용하지 않고 elastic-rest-client를 사용해서 구현하였습니다  
 `spring-data-elasticsearch`를 사용하시는 분은 해당 [Github](https://github.com/spring-projects/spring-batch-extensions/tree/master/spring-batch-elasticsearch)을 참고해 주시기 바랍니다  
+
 
 <br/>
 
@@ -1102,10 +1246,6 @@ POST reader_test/doc/_bulk
 그리고 Spring Batch에서 사용할 Reader를 구현하기 위해서는 ItemReader만 구현해 주면 됩니다  
 
 
-
-
----
-## ItemProcessor  
 
 
 ---
