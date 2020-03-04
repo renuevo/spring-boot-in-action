@@ -1275,6 +1275,8 @@ public FlatFileItemReader<ItemVo> multiFileItemReader() {
 
 ![Multi File Reader](./assets/multi-file-reader.PNG)  
 
+<br/>
+
 참고로 Resource를 Array를 읽는 방법은 여러가지가 있습니다  
 저는 위에 처럼 getResourcePatternResolver를 사용해 Pattern으로 가져와서 MultiResourceItemReader에 설정 해 줬습니다  
 다음과 같이도 설정이 가능합니다  
@@ -1290,13 +1292,9 @@ private Resource[] inputResources;
 
 ---
 
-
-
-
-
-
-
-
+이것으로 File ItemReader에 대해서 알아 봤습니다  
+위와 같이 Spring Batch는 여러 종류의 File들을 간편하게 Read 하는 방법을 제공 하고 있습니다  
+다음으로는 보다 안정적으로 데이터 관리하고 사용하는 DB와 Spring Batch를 연동하여 Read하는 방법에 대해서 알아보도록 하겠습니다  
 
 
 ---
