@@ -1139,8 +1139,6 @@ public XStreamMarshaller itemMarshaller() {
 @Configuration
 public class JobSecurityConfig {
 
-    //Security framework of XStream not initialized, XStream is probably vulnerable.
-    //https://stackoverflow.com/questions/49450397/vulnerability-warning-with-xstreammarshaller
     public JobSecurityConfig(XStreamMarshaller marshaller) {
         XStream xstream = marshaller.getXStream();
         XStream.setupDefaultSecurity(xstream);    /* highlight-line */
@@ -1153,7 +1151,76 @@ public class JobSecurityConfig {
 
 <br/>
 
-**4. JSON 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/JsonFileItemReaderJobConfig.java)
+**4. JSON 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/JsonFileItemReaderJobConfig.java)  
+이번엔 XML 형식보다 요즘 많이 사용되는 JSON형식을 읽는 ItemReader에 대해 알아 보겠습니다  
+Json형식은 XML처럼 복잡하지 않고 간단하게 Spring Batch에 있는 JsonItemReaderBuilder로 ItemReader를 생성 가능합니다  
+먼저 Sample Json 파일을 준비합니다  
+
+```json
+
+[
+  {
+    "number" : 1,
+    "data" : "one"
+  },
+  {
+    "number" : 2,
+    "data" : "two"
+  },
+  {
+    "number" : 3,
+    "data" : "three"
+  },
+  {
+    "number" : 4,
+    "data" : "four"
+  }
+]
+
+```
+그리고 그것에 맞는 VO Class를 하나 생성해 줍니다  
+
+<br/>
+
+```java
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class JsonItemVo {
+    int number;
+    String data;
+}
+
+```
+만약 VO객체의 변수명과 Json객체의 명이 다를 경우는 `@JsonProperty`를 사용해 이름을 지정해 주시면 됩니다  
+JacksonJsonObjectReader를 사용해서 내부적으로 ObjectMapper로 구현되기 때문입니다  
+Jackson과 관련하여 자세한 사용법을 알고 싶으시면 :point_right: [Jackson JSON Tutorial](https://www.baeldung.com/jackson)  
+
+<br/>
+
+```java
+
+@Bean
+public JsonItemReader<JsonItemVo> jsonItemReader(){
+    return new JsonItemReaderBuilder<JsonItemVo>()
+            .jsonObjectReader(new JacksonJsonObjectReader<>(JsonItemVo.class))  /* highlight-line */
+            .resource(new ClassPathResource("/sample_json_data.json"))
+            .name("jsonItemReader")
+            .build();
+}
+
+```
+ItemReader 설정은 다음과 같이 간단한 설정으로 JsonItem은 Read 가능합니다  
+**JsonItemReaderBuilder로 build하면서 jsonObjectReader로 JacksonJsonObjectReader로 설정하고 VO객처를 적용해 주면 됩니다**  
+그리고 실행하시면 아래 처럼 잘 Read 되는걸 확인 할 수 있습니다  
+
+![Json Reader](./assets/json-reader.PNG)
+
+<br/>
+
+
+
 
 
 ---
