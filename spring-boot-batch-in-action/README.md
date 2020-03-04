@@ -1313,8 +1313,6 @@ POST reader_test/doc/_bulk
 그리고 Spring Batch에서 사용할 Reader를 구현하기 위해서는 ItemReader만 구현해 주면 됩니다  
 
 
-
-
 ---
 ## Spring Batch Test  
 

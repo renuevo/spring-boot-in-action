@@ -54,7 +54,7 @@ public class CsvFileItemReaderJobConfig {
     @Bean
     public FlatFileItemReader<CsvItemVo> csvFileItemReader() {
         FlatFileItemReader<CsvItemVo> flatFileItemReader = new FlatFileItemReader<>();
-        flatFileItemReader.setResource(new ClassPathResource("/sample_data.csv"));
+        flatFileItemReader.setResource(new ClassPathResource("/read_sample/sample_data.csv"));
         flatFileItemReader.setLinesToSkip(1);
 
         DefaultLineMapper<CsvItemVo> defaultLineMapper = new DefaultLineMapper<>();

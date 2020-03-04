@@ -1,8 +1,6 @@
 package com.github.renuevo.config;
 
-import com.github.renuevo.vo.CsvItemVo;
 import com.github.renuevo.vo.JsonItemVo;
-import com.github.renuevo.vo.XmlItemVo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -50,7 +48,7 @@ public class JsonFileItemReaderJobConfig {
     public JsonItemReader<JsonItemVo> jsonItemReader(){
         return new JsonItemReaderBuilder<JsonItemVo>()
                 .jsonObjectReader(new JacksonJsonObjectReader<>(JsonItemVo.class))
-                .resource(new ClassPathResource("/sample_json_data.json"))
+                .resource(new ClassPathResource("/read_sample/sample_json_data.json"))
                 .name("jsonItemReader")
                 .build();
     }

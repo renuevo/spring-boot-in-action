@@ -1,9 +1,7 @@
 package com.github.renuevo.config;
 
-import com.github.renuevo.vo.CsvItemVo;
 import com.github.renuevo.vo.XmlItemVo;
 import com.google.common.collect.Maps;
-import com.thoughtworks.xstream.XStream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -51,7 +49,7 @@ public class XmlFileItemReaderJobConfig {
     public StaxEventItemReader<XmlItemVo> xmlFileItemReader() {
         return new StaxEventItemReaderBuilder<XmlItemVo>()
                 .name("xmlFileItemReader")
-                .resource(new ClassPathResource("/sample_xml_data.xml"))
+                .resource(new ClassPathResource("/read_sample/sample_xml_data.xml"))
                 .addFragmentRootElements("item")
                 .unmarshaller(itemMarshaller())
                 .build();
