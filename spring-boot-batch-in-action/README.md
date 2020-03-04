@@ -1153,7 +1153,7 @@ public class JobSecurityConfig {
 
 **4. JSON 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/JsonFileItemReaderJobConfig.java)  
 이번엔 XML 형식보다 요즘 많이 사용되는 JSON형식을 읽는 ItemReader에 대해 알아 보겠습니다  
-Json형식은 XML처럼 복잡하지 않고 간단하게 Spring Batch에 있는 JsonItemReaderBuilder로 ItemReader를 생성 가능합니다  
+Json형식은 XML처럼 복잡하지 않고 간단하게 Spring Batch에 있는 `JsonItemReaderBuilder`로 ItemReader를 생성 가능합니다  
 먼저 Sample Json 파일을 준비합니다  
 
 ```json
@@ -1194,7 +1194,7 @@ public class JsonItemVo {
 
 ```
 만약 VO객체의 변수명과 Json객체의 명이 다를 경우는 `@JsonProperty`를 사용해 이름을 지정해 주시면 됩니다  
-JacksonJsonObjectReader를 사용해서 내부적으로 ObjectMapper로 구현되기 때문입니다  
+`JacksonJsonObjectReader`를 사용해서 내부적으로 ObjectMapper로 구현되기 때문입니다  
 Jackson과 관련하여 자세한 사용법을 알고 싶으시면 :point_right: [Jackson JSON Tutorial](https://www.baeldung.com/jackson)  
 
 <br/>
@@ -1218,6 +1218,82 @@ ItemReader 설정은 다음과 같이 간단한 설정으로 JsonItem은 Read �
 ![Json Reader](./assets/json-reader.PNG)
 
 <br/>
+
+**5. Multi 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/MultiFileItemReaderJobConfig.java)  
+File Item Reader의 마지막으로 여러 File을 읽는 방법을 소개 하겠습니다  
+여러 파일을 읽을 때는 Spring Batch에서 제공하는 `MultiResourceItemReader`를 사용하시면 됩니다  
+일단 sample-txt 파일 2개를 준비합니다  
+
+<span class='code_header'>sample.txt</span>
+```text
+첫번째
+두번째
+세번째
+네번째
+다섯번째
+
+```
+<span class='code_header'>sample2.txt</span>
+```text
+
+여섯번째
+일곱번째
+여덟번째
+아홉번째
+열번째
+
+```
+
+Sample txt를 한 폴더에 두는 것으로 데이터는 준비되었습니다  
+
+<br/>
+
+```java
+
+@Bean
+@SneakyThrows
+public MultiResourceItemReader<ItemVo> multiResourceItemReader(){
+    MultiResourceItemReader<ItemVo> resourceItemReader = new MultiResourceItemReader<ItemVo>();
+    resourceItemReader.setResources(ResourcePatternUtils.getResourcePatternResolver(this.resourceLoader).getResources("read_sample/*.txt"));  /* highlight-line */  
+    resourceItemReader.setDelegate(multiFileItemReader());  /* highlight-line */  
+    return resourceItemReader;
+}
+
+
+@Bean
+public FlatFileItemReader<ItemVo> multiFileItemReader() {
+    FlatFileItemReader<ItemVo> flatFileItemReader = new FlatFileItemReader<>();
+    flatFileItemReader.setLineMapper((line, lineNumber) -> new ItemVo(line));
+    return flatFileItemReader;
+}
+
+```
+
+다음은 `MultiResourceItemReader` 코드를 보겠습니다  
+이전에는 `FlatFileItemReader`에서 Resource를 설정해 줬지만 이번에는 Multi Reader에서는 `MultiResourceItemReader`에 Resource를 Array를 설정해 주는것 만으로 
+여러 파일들을 읽게 설정이 가능합니다  
+
+![Multi File Reader](./assets/multi-file-reader.PNG)  
+
+참고로 Resource를 Array를 읽는 방법은 여러가지가 있습니다  
+저는 위에 처럼 getResourcePatternResolver를 사용해 Pattern으로 가져와서 MultiResourceItemReader에 설정 해 줬습니다  
+다음과 같이도 설정이 가능합니다  
+
+```java
+
+@Value("input/sample*.csv")
+private Resource[] inputResources;
+
+```
+
+<br/>
+
+---
+
+
+
+
+
 
 
 
