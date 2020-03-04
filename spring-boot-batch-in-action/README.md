@@ -763,6 +763,7 @@ public class JpaPagingItemReader<T> extends AbstractPagingItemReader<T> {
 
 ---
 
+
 앞서 본것과 같이 Chunk 지향처리 `3가지`의 구성요소로 이루어져 있습니다  
 
 1. ItemReader  
@@ -790,16 +791,23 @@ Spring Batch에서는 다양한 데이터를 읽어 올 수 있도록 기본적�
 ### ItemReader의 기본 구성
 
 먼저 가장 기본적인 SpringBatch의 ItemReader인 `JdbcPagingItemReader` 살펴 보며 ItemReader의 구조를 알아 보겠습니다  
+<br/>
+
 ![JdbcPaingItemReader UML_1](./assets/JdbcPagingItemReader-1.png)  
 
 보시는 것과 같이 `JdbcPagingItemReader`는 여러 Class와 Interface를 상속받아 구현되어 있습니다  
 여기서 눈여겨 볼것은 상위에 위치되어 있는 `ItemStream`와 `ItemReader` 인터페이스입니다  
+
+<br/>
 
 ![JdbcPaingItemReader UML_2](./assets/JdbcPagingItemReader-2.png)   
 
 
 먼저 2개의 인터페이스중 ItemReader를 먼저 살펴 보겠습니다  
 
+<br/>
+
+**1. ItemReader는 Step에서 요구하는 필수적인 인터페이스입니다**  
 ```java
 
 public interface ItemReader<T> {
@@ -807,10 +815,7 @@ public interface ItemReader<T> {
 } 
 
 ```
-
-**ItemReader는 Step에서 요구하는 필수적인 인터페이스입니다**  
 내부도 간단하게 Step에서 사용할 데이터를 가져오는 Read에 대한 역할에 충실하고 있습니다  
-
 Step은 이런 ItemReader를 받아와서 데이터 Reader 업무를 수행합니다  
 
 ```java
@@ -821,13 +826,13 @@ public SimpleStepBuilder<I, O> reader(ItemReader<? extends I> reader) {
 }   
 
 ```
-
-사용자 지정 Reader를  ItemReader를 구현할때 상속받아 구현하시면 됩니다  
+사용자 지정 Reader를  ItemReader를 구현할때 상속받아 read() 부분을 구현하시면 됩니다  
 
 <br/>
 
-다음은 ItemStream 입니다  
+**2. 다음은 ItemStream 입니다**  
 구성은 다음과 같이 3가지의 메소드를 가지고 있습니다  
+
 ```java
 
 public interface ItemStream {
@@ -847,22 +852,25 @@ update는 상태를 주기적으로 업데이트 하는 역할을 담당합니�
 
 <br/>
 
-
 기본 구성은 다음과 같고 다음으로 Spring Batch에서 제공하는 기본적인 ItemReader들과 커스텀 구현을 알아 보도록 하겠습니다  
 
-
 <br/>
- 
-### Spring Batch의 ItemReader
+
+---
+
+## Spring Batch의 ItemReader  
 
 Spring Batch에서 제공하는 ItemReader는 2가지의 유형으로 나눠서 설명드리겠습니다  
 
 **1. File 형식의 데이터 Reader (txt, csv, xml, json)**  
 **2. DB접근을 통한 데이터 Reader**  
 
-<br/>
+DB접근을 통한 데이터 Reader는 Chapter 3에서 설명드릴 예정입니다  
+Chapter 2에서는 File Reader에 대해서 살펴보도록 하겠습니다  
 
-#### File Reader  
+---
+
+### File Reader  
 
 **1. Txt 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/TxtFileItemReaderJobConfig.java)  
 txt 파일의 아이템 Reader는 **FlatFileItemReader**를 통해 Read 할 수 있습니다  
@@ -872,20 +880,20 @@ txt 파일의 아이템 Reader는 **FlatFileItemReader**를 통해 Read 할 수 
 @Bean
 public FlatFileItemReader<ItemVo> txtFileItemReader() {
     FlatFileItemReader<ItemVo> flatFileItemReader = new FlatFileItemReader<>();
-    flatFileItemReader.setResource(new ClassPathResource("/sample.txt"));
-    flatFileItemReader.setLineMapper((line, lineNumber) -> new ItemVo(line));
+    flatFileItemReader.setResource(new ClassPathResource("/sample.txt")); /* highlight-line */  
+    flatFileItemReader.setLineMapper((line, lineNumber) -> new ItemVo(line)); /* highlight-line */  
     return flatFileItemReader;
 }
 
 ```
 
 setResource로 Read할 파일의 Resource를 지정해줍니다  
-그러면 Step에서 Read할때 line으로 데이터를 Read하게 됩니다  
-Read하는 데이터를 내부적으로 LineMapper를 통해 Mapping을 진행하게 되는데,  
-setLineMapper를 통해 Read되는 Line의 데이터를 객체로 만들어서 return 해주면 됩니다  
+그러면 Step에서 Read할때 Line으로 데이터를 Read하게 됩니다  
+**Read하는 데이터를 내부적으로 LineMapper를 통해 Mapping을 진행하게 되며 setLineMapper를 통해 LineMapper를 지정해 주면됩니다**   
 
 <br/>
 
+<span class='code_header'>LineMapper</span>
 ```java
 
 public interface LineMapper<T> {
@@ -894,9 +902,11 @@ public interface LineMapper<T> {
 
 ```
 LineMapper는 2가지의 파라미터를 받게 되는데 line은 한줄의 데이터를 lineNumber는 해당데이터의 라인번호를 의미합니다  
-이를 토대로 Mapper를 커스텀하게 만들어서 설정 가능합니다  
+이를 토대로 Mapper를 프로세스에 맞게 만들어서 설정 가능합니다  
 
 <br/>
+
+---
 
 **2. Csv 파일 ItemReader**  :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/CsvFileItemReaderJobConfig.java)  
 
@@ -929,9 +939,8 @@ public FlatFileItemReader<CsvItemVo> csvFileItemReader() {
 ```
 
 예제에서는 flatFileItemReader에 setLinesToSkip을 설정해서 Header라인인 첫라인을 무시했습니다  
-그리고 DefaultLineMapper를 통해서 Csv파일을 Vo Class로 바인딩 해줍니다  
-내부적으로 DefaultLineMapper는 mapLine을 통해서 데이터를 Mapping 합니다  
-
+그리고 `DefaultLineMapper`를 통해서 Csv파일을 VO Class로 바인딩 해줍니다  
+내부적으로 `DefaultLineMapper`는 mapLine을 통해서 데이터를 Mapping 합니다  
 ```java
 
     @Override
@@ -946,10 +955,17 @@ public FlatFileItemReader<CsvItemVo> csvFileItemReader() {
 
 <br/>
 
-Tokenizer부터 살펴보겠습니다    
-Tokenizer는 DelimitedLineTokenizer를 사용했습니다   
+**Tokenizer부터 살펴보겠습니다**  
+
+```java
+
+DelimitedLineTokenizer delimitedLineTokenizer = new DelimitedLineTokenizer();
+delimitedLineTokenizer.setNames("number","item");
+
+```  
+Tokenizer는 `DelimitedLineTokenizer`를 사용했습니다   
 setNames를 통해 각각의 데이터의 이름만을 설정해주고 사용하였습니다  
-DelimitedLineTokenizer는 기본적으로 `,`를 구분가로 가지고 있어서 Csv를 Read할 경우 바로 사용 가능합니다  
+`DelimitedLineTokenizer`는 내부적으로 `,`를 구분자로 가지고 있어서 Csv를 Read할 경우 바로 사용 가능합니다  
 만약 다른 구분자가 다른 데이터를 가지고 올 경우에는 setDelimiter로 변경 가능합니다  
 
 ```java
@@ -973,14 +989,27 @@ public class DelimitedLineTokenizer extends AbstractLineTokenizer implements Ini
 
 ```
 
-다음으로 FieldSetMapper입니다  
-FieldSetMapper는 Tokenizer에서 가지고온 데이터들을 Vo로 바인드하는 역할을 합니다  
-기본적인 BeanWrapperFieldSetMapper을 사용하였고 setTargetType을 통해 class를 넘겨주면
-내부에서 newInstance를 통해 객체를 생성해서 데이터를 바인드하고 return 합니다   
+<br/>
+
+**다음으로 FieldSetMapper입니다**
+```java
+
+BeanWrapperFieldSetMapper<CsvItemVo> beanWrapperFieldSetMapper = new BeanWrapperFieldSetMapper<>();
+beanWrapperFieldSetMapper.setTargetType(CsvItemVo.class);
+
+```  
+FieldSetMapper는 Tokenizer에서 가지고온 데이터들을 VO로 바인드하는 역할을 합니다  
+기본적인 `BeanWrapperFieldSetMapper`을 사용하였고 `setTargetType`을 통해 class를 넘겨주면 내부에서 newInstance를 통해 객체를 생성해서 데이터를 바인드하고 return 합니다   
 
 <br/>
 
-이 두개의 기능을 DefaultLineMapper을 통해서 FlatFileItemReader에 전달하면 간편하게 Csv를 읽을 수 있습니다  
+**이 두개의 기능을 DefaultLineMapper을 통해서 FlatFileItemReader에 전달하면 간편하게 Csv를 읽을 수 있습니다**  
+```java
+
+defaultLineMapper.setLineTokenizer(delimitedLineTokenizer);
+defaultLineMapper.setFieldSetMapper(beanWrapperFieldSetMapper);
+
+```
 
 ~~이들을 활용하면 왠만한 File들은 전부 쉽게 읽을 수 있습니다~~
 
@@ -1014,6 +1043,8 @@ public FlatFileItemReader<CsvItemVo> csvFileItemReader() {
 ```
 
 <br/>
+
+---
 
 **3. XML 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/XmlFileItemReaderJobConfig.java)
 
@@ -1071,6 +1102,10 @@ Spring Boot의 Spring 버젼 확인 방법은 아래와 같은 Compile Dependenc
 이제 XML을 VO로 읽어 보겠습니다  
 Spring Batch에서는 XML을 읽기 위해서 `StaxEventItemReader` Class를 제공합니다  
 
+<br/>
+
+**먼저 VO객체 Class를 정의합니다**  
+
 ```java
 
 @Data
@@ -1079,10 +1114,12 @@ public class XmlItemVo {
     String data;
 }
 
-```
-VO객체 Class를 정의합니다  
+``` 
 주의 하실점은 다른곳에서도 사용하는 VO로 생성자를 재정의 할 경우 Default 생성자는 꼭 생성을 해주셔야 합니다  
-다음으로 ItemReader Bean을 정의합니다  
+
+<br/>
+
+**다음으로 ItemReader Bean을 정의합니다**  
 
 ```java
 
@@ -1098,14 +1135,14 @@ public StaxEventItemReader<XmlItemVo> xmlFileItemReader() {
 
 ```
 
-위의 소스를 한눈의 알아 볼 수 있을정도로 간결합니다  
+위의 소스를 한눈의 알아 볼 수 있을 정도로 간결합니다  
 그중에서 기존에 spring-oxm을 안접해 보신 분들에게는 `unmarshaller`만 새로운 개념으로 보이실 겁니다  
 unmarshaller는 간단히 말해서 스트림을 객체로 역직렬화하는 것입니다  
 관련 정보의 대해 자세히 알고 싶으신 분들은 [Outsider's Dev Story](https://blog.outsider.ne.kr/891)해당 포스터를 참고해 주시기 바랍니다  
 
 <br/>
 
-itemMarshaller는 역질렬화는 XStreamMarshaller를 통해 간단하게 정의 가능합니다  
+**itemMarshaller는 역질렬화는 XStreamMarshaller를 통해 간단하게 정의 가능합니다**  
 ```java
 
 @Bean
@@ -1148,14 +1185,17 @@ public class JobSecurityConfig {
 }
 
 ```
-
 <br/>
+
+---
 
 **4. JSON 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/JsonFileItemReaderJobConfig.java)  
 이번엔 XML 형식보다 요즘 많이 사용되는 JSON형식을 읽는 ItemReader에 대해 알아 보겠습니다  
 Json형식은 XML처럼 복잡하지 않고 간단하게 Spring Batch에 있는 `JsonItemReaderBuilder`로 ItemReader를 생성 가능합니다  
-먼저 Sample Json 파일을 준비합니다  
 
+<br/>
+
+**먼저 Sample Json 파일을 준비합니다**  
 ```json
 
 [
@@ -1178,10 +1218,10 @@ Json형식은 XML처럼 복잡하지 않고 간단하게 Spring Batch에 있는 
 ]
 
 ```
-그리고 그것에 맞는 VO Class를 하나 생성해 줍니다  
 
 <br/>
 
+**그리고 그것에 맞는 VO Class를 하나 생성해 줍니다  
 ```java
 
 @Data
@@ -1199,6 +1239,7 @@ Jackson과 관련하여 자세한 사용법을 알고 싶으시면 :point_right:
 
 <br/>
 
+<span class='code_header'>JsonItemReader</span>
 ```java
 
 @Bean
@@ -1212,17 +1253,19 @@ public JsonItemReader<JsonItemVo> jsonItemReader(){
 
 ```
 ItemReader 설정은 다음과 같이 간단한 설정으로 JsonItem은 Read 가능합니다  
-**JsonItemReaderBuilder로 build하면서 jsonObjectReader로 JacksonJsonObjectReader로 설정하고 VO객처를 적용해 주면 됩니다**  
+**JsonItemReaderBuilder로 build하면서 jsonObjectReader로 JacksonJsonObjectReader로 설정하고 VO객체를 적용해 주면 됩니다**  
 그리고 실행하시면 아래 처럼 잘 Read 되는걸 확인 할 수 있습니다  
 
 ![Json Reader](./assets/json-reader.PNG)
 
 <br/>
 
+---
+
 **5. Multi 파일 ItemReader** :point_right: [Code](https://github.com/renuevo/spring-boot-in-action/blob/master/spring-boot-batch-in-action/src/main/java/com/github/renuevo/config/MultiFileItemReaderJobConfig.java)  
 File Item Reader의 마지막으로 여러 File을 읽는 방법을 소개 하겠습니다  
 여러 파일을 읽을 때는 Spring Batch에서 제공하는 `MultiResourceItemReader`를 사용하시면 됩니다  
-일단 sample-txt 파일 2개를 준비합니다  
+일단 sample txt 파일 2개를 준비합니다  
 
 <span class='code_header'>sample.txt</span>
 ```text
@@ -1248,6 +1291,7 @@ Sample txt를 한 폴더에 두는 것으로 데이터는 준비되었습니다
 
 <br/>
 
+<span class='code_header'>Multi File ItemReader</span>
 ```java
 
 @Bean
@@ -1294,7 +1338,7 @@ private Resource[] inputResources;
 
 이것으로 File ItemReader에 대해서 알아 봤습니다  
 위와 같이 Spring Batch는 여러 종류의 File들을 간편하게 Read 하는 방법을 제공 하고 있습니다  
-다음으로는 보다 안정적으로 데이터 관리하고 사용하는 DB와 Spring Batch를 연동하여 Read하는 방법에 대해서 알아보도록 하겠습니다  
+다음으로는 보다 안정적으로 데이터 관리하고 사용하는 DB와 Spring Batch를 연동하여 Read하는 방법에 대해서 알아보도록 하겠습니다 
 
 
 ---
