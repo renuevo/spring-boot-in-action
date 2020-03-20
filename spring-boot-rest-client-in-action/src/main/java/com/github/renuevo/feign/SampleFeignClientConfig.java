@@ -28,13 +28,11 @@ public class SampleFeignClientConfig {
     private final Encoder encoder;
     private final Decoder decoder;
     private final Contract contract;
-    private final Client client;
 
     @Bean
     public SampleBuildFeignClient recruitSearchClient() {
         //https://github.com/OpenFeign/feign#dynamic-query-parameters
         return Feign.builder()
-                .client(client)
                 .encoder(encoder)
                 .decoder(decoder)
                 .contract(contract)
