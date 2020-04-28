@@ -40,7 +40,7 @@ public class ElasticRestClientConfig {
 
         Objects.requireNonNull(elasticHostList).forEach(it -> httpHostList.add(new HttpHost(it, elasticPort, "http")));
         return RestClient.builder(httpHostList.toArray(new HttpHost[0]))
-                .setMaxRetryTimeoutMillis(10000)
+                //.setMaxRetryTimeoutMillis(10000)
                 .setDefaultHeaders(headers);
     }
 

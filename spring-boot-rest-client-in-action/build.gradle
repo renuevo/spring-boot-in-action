@@ -1,6 +1,6 @@
-
-ext{
+ext {
     set('springCloudVersion', "Greenwich.RELEASE")
+    set('elasticsearch.version', "7.3.2")
 }
 
 dependencyManagement {
@@ -12,6 +12,9 @@ dependencyManagement {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    implementation 'org.elasticsearch:elasticsearch:7.3.2'
     implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.3.2'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.0'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.10'
 }

@@ -2,7 +2,9 @@
 spring:
   main:
     banner-mode: 'off'
+#    allow-bean-definition-overriding: true
 
 search:
   es-host: localhost
   es-port: 9200
+  es-index: restclient_test_1
