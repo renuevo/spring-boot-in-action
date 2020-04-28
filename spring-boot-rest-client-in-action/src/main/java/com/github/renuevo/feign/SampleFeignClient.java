@@ -1,7 +1,7 @@
 package com.github.renuevo.feign;
 
 
-import com.github.renuevo.dto.NaverBlogParam;
+import com.github.renuevo.dto.NaverBlogParamDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +14,6 @@ public interface SampleFeignClient {
     String naverBlogSearch(
             @RequestHeader("X-Naver-Client-Id") String id,
             @RequestHeader("X-Naver-Client-Secret") String secret,
-            @SpringQueryMap NaverBlogParam naverBlogParam);
+            @SpringQueryMap NaverBlogParamDto naverBlogParamDto);
 
 }

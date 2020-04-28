@@ -34,22 +34,17 @@ public class ElasticRestClientConfig {
     @Value("${search.es-host}")
     public List<String> elasticHostList;
 
-    @SuppressWarnings("unchecked")
-    //@Bean(name = "customRestClientBuilder")
     public RestClientBuilder restClientBuilder() {
         List<HttpHost> httpHostList = Lists.newArrayList();
         Header[] headers = {new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"), new BasicHeader(HttpHeaders.CONTENT_ENCODING, "UTF-8")};
 
-        Objects.requireNonNull(elasticHostList).forEach(it -> {
-            httpHostList.add(new HttpHost(it, elasticPort, "http"));
-        });
-
+        Objects.requireNonNull(elasticHostList).forEach(it -> httpHostList.add(new HttpHost(it, elasticPort, "http")));
         return RestClient.builder(httpHostList.toArray(new HttpHost[0]))
                 .setMaxRetryTimeoutMillis(10000)
                 .setDefaultHeaders(headers);
     }
 
-    @Bean
+    @Bean(destroyMethod = "close")
     public RestHighLevelClient restHighLevelClient() {
         return new RestHighLevelClient(restClientBuilder());
     }
