@@ -7,4 +7,4 @@ spring:
 search:
   es-host: localhost
   es-port: 9200
-  es-index: restclient_test_1
+  es-index: ${es.index:restclient_test_1}

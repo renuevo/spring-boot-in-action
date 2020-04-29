@@ -1,14 +1,18 @@
 package com.github.renuevo.elastic.controller;
 
 import com.github.renuevo.dto.ElasticDataDto;
+import com.github.renuevo.dto.ElasticParamDto;
 import com.github.renuevo.elastic.service.ElasticWebFluxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.validation.Valid;
 
 /**
  * <pre>
@@ -32,6 +36,28 @@ public class ElasticWebfluxController {
                     log.error("Get Error {}", error.getMessage(), error);
                     return Mono.empty();
                 });
+    }
+
+    @GetMapping("/search")
+    public Flux<ElasticDataDto> searchDoc(@ModelAttribute @Valid ElasticParamDto elasticParamDto, Errors errors) {
+        try {
+        /*    if (errors.hasErrors())
+                return Flux.just(ResponseEntity.badRequest().body(errors.getAllErrors()));
+*/
+            //search
+
+
+            //self hateoas
+            Link selfLink = ControllerLinkBuilder
+                    .linkTo(ControllerLinkBuilder.methodOn(ElasticWebfluxController.class).searchDoc(elasticParamDto, errors))
+                    .withSelfRel();
+
+        } catch (Exception e) {
+            log.error("Elastic Webflux List Search Error {}", e.getMessage(), e);
+            log.error("Error Param {}", elasticParamDto);
+            //  return Flux.just(ResponseEntity.badRequest().body(e.getMessage()));
+        }
+        return elasticWebFluxService.searchDoc(elasticParamDto);
     }
 
 }

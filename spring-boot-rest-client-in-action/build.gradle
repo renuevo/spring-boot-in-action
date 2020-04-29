@@ -12,6 +12,7 @@ dependencyManagement {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     implementation 'org.elasticsearch:elasticsearch:7.3.2'
     implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.3.2'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.0'
