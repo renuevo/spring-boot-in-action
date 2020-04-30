@@ -41,9 +41,12 @@ public class ElasticWebfluxController {
     @GetMapping("/search")
     public Flux<ElasticDataDto> searchDoc(@ModelAttribute @Valid ElasticParamDto elasticParamDto, Errors errors) {
         try {
-        /*    if (errors.hasErrors())
+
+            /*
+            if (errors.hasErrors())
                 return Flux.just(ResponseEntity.badRequest().body(errors.getAllErrors()));
-*/
+            */
+
             //search
 
 
@@ -58,6 +61,32 @@ public class ElasticWebfluxController {
             //  return Flux.just(ResponseEntity.badRequest().body(e.getMessage()));
         }
         return elasticWebFluxService.searchDoc(elasticParamDto);
+    }
+
+
+    @PostMapping("/create/{id}")
+    public Mono<Void> putDoc(@PathVariable String id, @ModelAttribute @Valid ElasticDataDto elasticDataDto, Errors errors) {
+        try {
+
+            /*
+            if (errors.hasErrors())
+                return Flux.just(ResponseEntity.badRequest().body(errors.getAllErrors()));
+            */
+
+            //search
+
+
+            //self hateoas
+            Link selfLink = ControllerLinkBuilder
+                    .linkTo(ControllerLinkBuilder.methodOn(ElasticWebfluxController.class).putDoc(id, elasticDataDto, errors))
+                    .withSelfRel();
+
+        } catch (Exception e) {
+            log.error("Elastic Webflux List Search Error {}", e.getMessage(), e);
+            log.error("Error Param {}", elasticDataDto);
+            //  return Flux.just(ResponseEntity.badRequest().body(e.getMessage()));
+        }
+        return elasticWebFluxService.putDoc(elasticDataDto, id);
     }
 
 }

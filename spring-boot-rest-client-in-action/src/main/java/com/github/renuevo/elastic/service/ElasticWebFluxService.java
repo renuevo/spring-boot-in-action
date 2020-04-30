@@ -9,10 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,7 +80,6 @@ public class ElasticWebFluxService {
      * </pre>
      */
     public Flux<ElasticDataDto> searchDoc(ElasticParamDto elasticParamDto) {
-
         SearchRequest searchRequest = new SearchRequest(index);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.matchQuery("word", elasticParamDto.getKeyword()))
@@ -103,6 +105,27 @@ public class ElasticWebFluxService {
             @Override
             public void onFailure(Exception e) {
                 log.error("Search Error {}", e.getMessage(), e);
+                sink.error(e);
+            }
+        }));
+    }
+
+
+    @SneakyThrows
+    public Mono<Void> putDoc(ElasticDataDto elasticDataDto, String id){
+        IndexRequest indexRequest = new IndexRequest(index);
+        indexRequest.id(id);
+        indexRequest.source(objectMapper.writeValueAsString(elasticDataDto), XContentType.JSON);
+        return Mono.create(sink -> restHighLevelClient.indexAsync(indexRequest, RequestOptions.DEFAULT, new ActionListener<>() {
+            @Override
+            public void onResponse(IndexResponse indexResponse) {
+                log.info("Index Ok {}", indexResponse.toString());
+                sink.success();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                log.error("Index Error {}", e.getMessage(), e);
                 sink.error(e);
             }
         }));
