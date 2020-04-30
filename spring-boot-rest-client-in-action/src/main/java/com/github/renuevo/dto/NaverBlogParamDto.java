@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NaverBlogParam {
+public class NaverBlogParamDto {
     String query;
     int display;
     int start;
