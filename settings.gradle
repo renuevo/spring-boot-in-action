@@ -1,3 +1,4 @@
 rootProject.name = 'spring-boot-in-action'
 include 'spring-boot-batch-in-action', 'spring-boot-scope-in-action', 'spring-boot-exception-in-action','spring-boot-rest-client-in-action','spring-boot-rest-docs-in-action'
+include 'spring-boot-jpa-in-action'
 

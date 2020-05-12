@@ -13,7 +13,7 @@ buildscript {
 
 subprojects {
 
-    //apply plugin: 'war'
+    apply plugin: 'war'
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
@@ -64,5 +64,9 @@ project(':spring-boot-exception-in-action'){
 }
 
 project(':spring-boot-rest-client-in-action'){
+
+}
+
+project(':spring-boot-jpa-in-action'){
 
 }
