@@ -93,6 +93,12 @@ ACID의 원칙을 보장한다 : 원자성, 일관성, 격리성, 지속성
 
 
 
+* 한 row의 대해서 다중의 Transaction이 shared lock을 걸수 있다
+* shared lock에 대해서 transaction이 exclusive lock을 걸수 없다
+* exclusive lock이 걸린 row에 다른 transaction이 shared와 exclusive lock 두개 모두 걸 수 없다
+
+
+
 #### Record lock
 
 DB의 index record에 걸리는 lock을 의미한다
@@ -133,3 +139,58 @@ Consistent란 read(`SELECT`)에 대해 DB에서 고유하게 가지고 있는 Sn
 
 
 
+#### REPEATABLE READ
+
+반복해서 read를 수행해도 읽어 들이는 값이 변화하지 않는 격리 level
+
+처음 transaction의 read operation이후 모든 read operation마다 해당 시점을 기준으로 consistent read를 수행한다
+
+때문에 **첫 read시의 snapshot만을 조회하므로 도중에 commit된 데이터를 업데이트 되지 않는다**
+
+gap lock을 사용한다
+
+
+
+#### READ COMMITTED
+
+commit된 데이터만 보이는 수준의 격리 level
+
+**read operation마다 DB snapshot을 다시 뜬다**
+
+**commit된 데이터만을 읽어오기 위해서 consistent read를 수행**해야 한다
+
+recode lock을 사용하여서 새로 생성되는 index에 대해서는 중간에 새로이 값이 업데이트 될 수 있다
+
+
+
+#### READ UNCOMMITTED
+
+기본 구성은 READ COMMITTED와 동일하지만 **commit되지 않은 중간데이터를 읽어 온다**
+
+이후 데이터가 롤백된다면 **Dirty Read**가 발생한다
+
+InnoDB의 경우 실행된 모든 쿼리를 DB에 적용하고 나중에 commit으로 확정하는 구조를 가지고 있다
+
+따라서 따로 consistent read를 하지 않으면 해당 시점의 데이터를 그대로 읽어 온다
+
+
+
+#### SERIALIZABLE
+
+기본적으로 모든 REPEATABLE READ와 동일하게 동작한다
+
+하지만 **SELECT에 대해서 모두 SELECT ... FOR SHARE로 자동으로 변경된다**
+
+때문에 2개 이상의 Transaction에서 접근해서 처리 할때 각각의 shard lock이 걸리는 상황해서
+
+두 요청 모두 받아 들여 지지 않는다
+
+하지만 **굉장히 쉽게 deadlock**이 걸릴 수 있다
+
+
+
+---
+
+
+
+JPA의 lock과 DB isolation level을 적절히  조합하면 데이터의 무결성을 지키며 동시성도 향상시킬 수 있다
