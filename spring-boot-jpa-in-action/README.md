@@ -194,3 +194,9 @@ InnoDB의 경우 실행된 모든 쿼리를 DB에 적용하고 나중에 commit�
 
 
 JPA의 lock과 DB isolation level을 적절히  조합하면 데이터의 무결성을 지키며 동시성도 향상시킬 수 있다
+
+
+---
+
+# JPA N+1 문제와 해결 방안
+
