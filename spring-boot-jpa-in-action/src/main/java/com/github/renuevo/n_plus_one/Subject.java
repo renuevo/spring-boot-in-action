@@ -1,6 +1,7 @@
-package com.github.renuevo.one_plus_n;
+package com.github.renuevo.n_plus_one;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ public class Subject {
     @GeneratedValue
     private Long id;
 
+    @Getter
     private String name;
 
     @ManyToOne

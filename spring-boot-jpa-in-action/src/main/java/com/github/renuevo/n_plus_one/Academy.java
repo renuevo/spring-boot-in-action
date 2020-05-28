@@ -1,7 +1,8 @@
-package com.github.renuevo.one_plus_n;
+package com.github.renuevo.n_plus_one;
 
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class Academy {
 
     private String name;
 
+    @Getter
     @OneToMany(cascade =  CascadeType.ALL)
     @JoinColumn(name="academy_id")
     private Set<Subject> subjectSet = new LinkedHashSet<>();
