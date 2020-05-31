@@ -1,5 +1,6 @@
 package com.github.renuevo.n_plus_one;
 
+import com.google.common.collect.Lists;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class AcademyServiceTest {
 
     @Before
     public void setup() {
-        List<Academy> academies = List.of();
+        List<Academy> academies = Lists.newArrayList();
 
         for (int i = 0; i < 10; i++) {
             Academy academy = Academy.builder()
@@ -54,6 +55,17 @@ public class AcademyServiceTest {
 
         //then
         assertThat(subjectNames.size(), is(10));
+    }
+
+
+    @Test
+    public void Academy_join_fetch사용() throws Exception {
+        //given
+        List<String> subjectNames = academyService.findJoinAllSubjectNames();
+
+        //then
+        assertThat(subjectNames.size(), is(10));
+
     }
 
 }

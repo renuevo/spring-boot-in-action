@@ -20,6 +20,12 @@ public class AcademyService {
         return extractSubjectNames(academyRepository.findAll());
     }
 
+
+    @Transactional(readOnly = true)
+    public List<String> findJoinAllSubjectNames(){
+        return extractSubjectNames(academyRepository.findeAllJoinFetch());
+    }
+
     /**
      * Lazy Load를 수행하기 위해 메소드를 별도로 생성
      */
