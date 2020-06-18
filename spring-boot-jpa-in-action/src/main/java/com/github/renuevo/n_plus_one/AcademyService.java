@@ -33,8 +33,11 @@ public class AcademyService {
         log.info(">>>>>>>>[모든 과목을 추출한다]<<<<<<<<<");
         log.info("Academy Size : {}", academies.size());
 
-        return academies.stream()
+        List<String> resultList = academies.stream()
                 .map(a -> a.getSubjectSet().iterator().next().getName())
                 .collect(Collectors.toList());
+
+        log.info("N Plus One 발생 여부 확인");
+        return resultList;
     }
 }
