@@ -14,6 +14,7 @@ import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuild
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.SingleColumnRowMapper;
 
 import javax.sql.DataSource;
 
@@ -60,6 +61,8 @@ public class JdbcCursorItemReaderJobConfig {
         return new JdbcCursorItemReaderBuilder<Pay>()   //Cursor는 하나의 Connection으로 사용하기 때문에 Timeout 시간을 길게 부여해야 한다
                 .fetchSize(chunkSize)       //Database에서 가져오는 개수 / read()를 통해 1개씩 (Paging과 다름)
                 .dataSource(dataSource)
+                //.rowMapper(SingleColumnRowMapper.newInstance(Long.class))
+                //.sql("SELECT id FROM pay")
                 .rowMapper(new BeanPropertyRowMapper<>(Pay.class))
                 .sql("SELECT id, amount, tx_name, tx_date_time FROM pay")
                 .name("jdbcCursorItemReader")   //reader name
