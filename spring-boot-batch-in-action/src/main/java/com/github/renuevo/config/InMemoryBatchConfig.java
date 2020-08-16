@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
  * @since : 2020-08-13
  * </pre>
  */
-@Configuration
+//@Configuration
 public class InMemoryBatchConfig implements BatchConfigurer {
 
     private PlatformTransactionManager transactionManager;
@@ -28,7 +28,7 @@ public class InMemoryBatchConfig implements BatchConfigurer {
     private JobLauncher jobLauncher;
     private JobExplorer jobExplorer;
 
-    @PostConstruct
+   // @PostConstruct
     public void init() throws Exception {
         if (this.transactionManager == null) this.transactionManager = new ResourcelessTransactionManager();
 
