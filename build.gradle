@@ -42,6 +42,8 @@ subprojects {
 
     dependencies {
         implementation group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+        implementation 'org.mapstruct:mapstruct:1.3.1.Final'
+        annotationProcessor 'org.mapstruct:mapstruct-processor:1.3.1.Final'
         compileOnly 'org.projectlombok:lombok:1.18.10'
         annotationProcessor 'org.projectlombok:lombok:1.18.10'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -68,5 +70,9 @@ project(':spring-boot-rest-client-in-action'){
 }
 
 project(':spring-boot-jpa-in-action'){
+
+}
+
+project(':spring-boot-redis-in-action'){
 
 }
