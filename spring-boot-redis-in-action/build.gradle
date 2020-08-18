@@ -1,0 +1,5 @@
+dependencies {
+    compile group: 'org.springframework.data', name: 'spring-data-redis', version: '2.3.3.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
