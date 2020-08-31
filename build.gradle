@@ -60,8 +60,11 @@ project(':spring-boot-scope-in-action'){
 
 }
 
-
 project(':spring-boot-exception-in-action'){
+
+}
+
+project(':spring-boot-guide-in-action'){
 
 }
 
