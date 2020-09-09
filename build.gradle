@@ -79,3 +79,7 @@ project(':spring-boot-jpa-in-action'){
 project(':spring-boot-redis-in-action'){
 
 }
+
+project(':spring-boot-kafka-in-action'){
+
+}

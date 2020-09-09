@@ -3,4 +3,5 @@ include 'spring-boot-batch-in-action', 'spring-boot-scope-in-action', 'spring-bo
 include 'spring-boot-jpa-in-action'
 include 'spring-boot-redis-in-action'
 include 'spring-boot-guide-in-action'
+include 'spring-boot-kafka-in-action'
 
