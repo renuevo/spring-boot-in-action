@@ -11,7 +11,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class KafkaService {
+public class KafkaProducerService {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
