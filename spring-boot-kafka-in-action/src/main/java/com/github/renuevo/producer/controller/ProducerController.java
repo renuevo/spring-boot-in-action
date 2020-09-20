@@ -28,7 +28,11 @@ public class ProducerController {
 
     @GetMapping("/push/data_model")
     public void pushDataModel(@ModelAttribute DataModel dataModel) {
-        this.kafkaProducerService.sendDataModelMessage(dataModel);
+        this.kafkaProducerService.sendDataModel(dataModel);
     }
 
+    @GetMapping("/push_async/data_model")
+    public void pushAsyncDataModel(@ModelAttribute DataModel dataModel) {
+        this.kafkaProducerService.sendAsyncDataModel(dataModel);
+    }
 }
