@@ -83,3 +83,7 @@ project(':spring-boot-redis-in-action'){
 project(':spring-boot-kafka-in-action'){
 
 }
+
+project(':spring-boot-event-in-action'){
+
+}

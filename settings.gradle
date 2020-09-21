@@ -4,4 +4,5 @@ include 'spring-boot-jpa-in-action'
 include 'spring-boot-redis-in-action'
 include 'spring-boot-guide-in-action'
 include 'spring-boot-kafka-in-action'
+include 'spring-boot-event-in-action'
 
