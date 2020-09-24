@@ -7,9 +7,9 @@ import com.github.renuevo.repo.store.JpaStoreRepository;
 import com.github.renuevo.repo.store.Store;
 import com.github.renuevo.setup.OrderHistoryBuilder;
 import com.github.renuevo.setup.StoreBuilder;
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class SpringBootEventApplicationTests {
+class SpringBootEventApplicationTests {
 
     @Autowired
     JpaStoreRepository jpaStoreRepository;
@@ -35,9 +35,8 @@ public class SpringBootEventApplicationTests {
     }
 
     @Test
-    public void insert() {
-        init();
-        System.out.println(jpaOrderRepository.findAll().get(0).getId());
+    void insert() {
+       Assert.assertTrue(jpaOrderRepository.findAll().size()>0);
     }
 
 }
