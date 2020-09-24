@@ -1,0 +1,18 @@
+spring:
+  main:
+    banner-mode: 'off'
+    allow-bean-definition-overriding: true
+  datasource:
+    hikari:
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:mem:spring-event
+      username: sa
+      password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.H2Dialect
