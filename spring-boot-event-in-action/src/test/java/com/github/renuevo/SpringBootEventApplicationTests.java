@@ -2,6 +2,7 @@ package com.github.renuevo;
 
 
 import com.github.renuevo.domain.order.OrderDataModel;
+import com.github.renuevo.repo.order.JpaOrderRepository;
 import com.github.renuevo.repo.order.OrderMapper;
 import com.github.renuevo.repo.order.OrderRdbRepository;
 import com.github.renuevo.repo.store.JpaStoreRepository;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,11 +28,7 @@ class SpringBootEventApplicationTests {
     JpaStoreRepository jpaStoreRepository;
 
     @Autowired
-    StoreRdbRepository storeRdbRepository;
-
-    @Autowired
     OrderRdbRepository orderRdbRepository;
-
 
     @BeforeEach
     public void init() {

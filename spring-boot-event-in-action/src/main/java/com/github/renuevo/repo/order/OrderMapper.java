@@ -22,7 +22,10 @@ public interface OrderMapper {
     @Mapping(target = "storeDataModel" ,expression = "java(StoreMapper.INSTANCE.sotreToStoreDataModel(orderHistory.getStore()))")
     OrderDataModel orderToOrderDataModel(OrderHistory orderHistory);
 
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "store", expression = "java(StoreMapper.INSTANCE.storeDataModelToStore(orderDataModel.getStoreDataModel()))")
     OrderHistory orderDataModelToOrder(OrderDataModel orderDataModel);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "store", expression = "java(StoreMapper.INSTANCE.storeDataModelToStore(orderDataModel.getStoreDataModel()))")
+    OrderHistory orderDataModelToNewOrder(OrderDataModel orderDataModel);
 }
