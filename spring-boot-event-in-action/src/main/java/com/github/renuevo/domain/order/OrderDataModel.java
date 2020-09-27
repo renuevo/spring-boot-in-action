@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class OrderDataModel {
+    private final Long id;
     private final StoreDataModel storeDataModel;
     private final Integer count;
     private final String name;

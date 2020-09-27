@@ -26,11 +26,11 @@ public class Store {
 
     @OneToMany
     @JoinColumn(name = "store_id")
-    private Set<OrderHistory> orderHistorySet = new LinkedHashSet<>();
+    private final Set<OrderHistory> orderHistorySet = new LinkedHashSet<>();
 
     public boolean orderCount(OrderHistory orderHistory) {
         if (stock - orderHistory.getCount() >= 0) {
-            orderHistorySet.add(orderHistory);
+            this.orderHistorySet.add(orderHistory);
             return true;
         }
         return false;
