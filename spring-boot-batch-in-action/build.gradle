@@ -14,6 +14,10 @@ dependencies {
     //implementation group: 'org.elasticsearch', name: 'elasticsearch', version: '6.5.4'
     implementation 'com.github.renuevo:drcode_library:1.2'  //add releases current version
     runtimeOnly 'com.h2database:h2'
+
+    implementation 'com.querydsl:querydsl-jpa'
+    implementation 'com.querydsl:querydsl-apt'
+
     testImplementation 'org.springframework.batch:spring-batch-test'
 
     //implementation 'org.springframework.boot:spring-boot-starter-web'
