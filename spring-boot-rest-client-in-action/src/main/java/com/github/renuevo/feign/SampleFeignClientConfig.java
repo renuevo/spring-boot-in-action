@@ -1,6 +1,5 @@
 package com.github.renuevo.feign;
 
-import feign.Client;
 import feign.Contract;
 import feign.Feign;
 import feign.codec.Decoder;
@@ -10,7 +9,6 @@ import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.env.Environment;
 
 /**
  * <pre>
@@ -24,7 +22,6 @@ import org.springframework.core.env.Environment;
 @Import(FeignClientsConfiguration.class)
 public class SampleFeignClientConfig {
 
-    private final Environment env;
     private final Encoder encoder;
     private final Decoder decoder;
     private final Contract contract;

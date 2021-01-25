@@ -9,6 +9,7 @@ import com.github.renuevo.feign.SampleFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -20,9 +21,14 @@ public class FeignClientController {
     private final SampleBuildFeignClient sampleBuildFeignClient;
     private final NaverProperty naverProperty;
 
-    @GetMapping("/test")
-    public NaverResponse callSampleFeginClient() {
-        return sampleFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query("카카오페이").start(1).display(10).sort("sim").build());
+    @GetMapping("/client/search")
+    public NaverResponse callSampleFeignClient(@RequestParam("query") String query) {
+        return sampleFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build());
+    }
+
+    @GetMapping("/build-client/search")
+    public NaverResponse callSampleBuildFeignClient(@RequestParam("query") String query) {
+        return sampleBuildFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build());
     }
 
 
