@@ -1,15 +1,14 @@
 package com.github.renuevo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
+@Getter
+@Builder
 public class NaverBlogParamDto {
-    String query;
-    int display;
-    int start;
-    String sort;
+    private final String query;
+    private final int display;
+    private final int start;
+    private final String sort;
 }
