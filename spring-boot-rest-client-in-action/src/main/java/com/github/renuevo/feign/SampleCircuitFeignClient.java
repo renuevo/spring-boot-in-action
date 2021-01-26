@@ -18,7 +18,7 @@ public class SampleCircuitFeignClient {
         return sampleFeignClient.naverBlogSearch(id, secret, naverBlogParamDto);
     }
 
-    public NaverResponse fallback(Exception exception) {
+    public NaverResponse fallback(String id, String secret, NaverBlogParamDto naverBlogParamDto, Exception exception) {
         return new NaverResponse();
     }
 }
