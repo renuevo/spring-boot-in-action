@@ -5,6 +5,7 @@ import com.github.renuevo.common.NaverProperty;
 import com.github.renuevo.dto.NaverBlogParamDto;
 import com.github.renuevo.dto.NaverResponse;
 import com.github.renuevo.feign.SampleBuildFeignClient;
+import com.github.renuevo.feign.SampleCircuitFeignClient;
 import com.github.renuevo.feign.SampleFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ public class FeignClientController {
 
     private final SampleFeignClient sampleFeignClient;
     private final SampleBuildFeignClient sampleBuildFeignClient;
+    private final SampleCircuitFeignClient sampleCircuitFeignClient;
     private final NaverProperty naverProperty;
 
     @GetMapping("/client/search")
@@ -29,6 +31,12 @@ public class FeignClientController {
     @GetMapping("/build-client/search")
     public NaverResponse callSampleBuildFeignClient(@RequestParam("query") String query) {
         return sampleBuildFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build());
+    }
+
+
+    @GetMapping("/circuit-client/search")
+    public NaverResponse callCircuitFeignClient(@RequestParam("query") String query) {
+        return sampleCircuitFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build());
     }
 
 
