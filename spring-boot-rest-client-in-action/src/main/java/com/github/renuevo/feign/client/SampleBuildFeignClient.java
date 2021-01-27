@@ -1,4 +1,4 @@
-package com.github.renuevo.feign;
+package com.github.renuevo.feign.client;
 
 import com.github.renuevo.dto.NaverBlogParamDto;
 import com.github.renuevo.dto.NaverResponse;

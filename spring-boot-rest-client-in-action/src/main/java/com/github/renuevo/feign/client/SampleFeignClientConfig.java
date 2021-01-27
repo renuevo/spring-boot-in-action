@@ -1,4 +1,4 @@
-package com.github.renuevo.feign;
+package com.github.renuevo.feign.client;
 
 import feign.Contract;
 import feign.Feign;
