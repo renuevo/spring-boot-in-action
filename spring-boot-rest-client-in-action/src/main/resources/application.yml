@@ -2,6 +2,7 @@
 spring:
   main:
     banner-mode: 'off'
+    allow-bean-definition-overriding: true
 #    allow-bean-definition-overriding: true
 
 naver:
