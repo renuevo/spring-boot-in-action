@@ -1,13 +1,14 @@
 package com.github.renuevo.common;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
-@Setter
+
 @Getter
-@Configuration
+@AllArgsConstructor
+@ConstructorBinding
 @ConfigurationProperties(prefix = "naver.client")
 public class NaverProperty {
     private String id;

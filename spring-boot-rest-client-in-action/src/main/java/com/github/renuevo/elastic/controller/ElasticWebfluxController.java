@@ -5,8 +5,8 @@ import com.github.renuevo.dto.ElasticParamDto;
 import com.github.renuevo.elastic.service.ElasticWebFluxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+//import org.springframework.hateoas.Link;
+//import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -51,9 +51,10 @@ public class ElasticWebfluxController {
 
 
             //self hateoas
-            Link selfLink = ControllerLinkBuilder
-                    .linkTo(ControllerLinkBuilder.methodOn(ElasticWebfluxController.class).searchDoc(elasticParamDto, errors))
-                    .withSelfRel();
+            /*
+            Link selfLink = WebMvcLinkBuilder
+                    .linkTo(WebMvcLinkBuilder.methodOn(ElasticWebfluxController.class).searchDoc(elasticParamDto, errors))
+                    .withSelfRel();*/
 
         } catch (Exception e) {
             log.error("Elastic Webflux List Search Error {}", e.getMessage(), e);
@@ -77,9 +78,10 @@ public class ElasticWebfluxController {
 
 
             //self hateoas
-            Link selfLink = ControllerLinkBuilder
-                    .linkTo(ControllerLinkBuilder.methodOn(ElasticWebfluxController.class).putDoc(id, elasticDataDto, errors))
-                    .withSelfRel();
+                        /*
+            Link selfLink = WebMvcLinkBuilder
+                    .linkTo(WebMvcLinkBuilder.methodOn(ElasticWebfluxController.class).putDoc(id, elasticDataDto, errors))
+                    .withSelfRel();*/
 
         } catch (Exception e) {
             log.error("Elastic Webflux List Search Error {}", e.getMessage(), e);

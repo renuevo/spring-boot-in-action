@@ -4,14 +4,16 @@ package com.github.renuevo.feign.controller;
 import com.github.renuevo.common.NaverProperty;
 import com.github.renuevo.dto.NaverBlogParamDto;
 import com.github.renuevo.dto.NaverResponse;
-import com.github.renuevo.feign.SampleBuildFeignClient;
-import com.github.renuevo.feign.SampleCircuitFeignClient;
-import com.github.renuevo.feign.SampleFeignClient;
+import com.github.renuevo.feign.client.SampleBuildFeignClient;
+import com.github.renuevo.feign.client.SampleCircuitFeignClient;
+import com.github.renuevo.feign.client.SampleFeignClient;
+import com.github.renuevo.feign.client.SampleReactiveFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
@@ -21,6 +23,7 @@ public class FeignClientController {
     private final SampleFeignClient sampleFeignClient;
     private final SampleBuildFeignClient sampleBuildFeignClient;
     private final SampleCircuitFeignClient sampleCircuitFeignClient;
+    private final SampleReactiveFeignClient sampleReactiveFeignClient;
     private final NaverProperty naverProperty;
 
     @GetMapping("/client/search")
@@ -33,11 +36,20 @@ public class FeignClientController {
         return sampleBuildFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build());
     }
 
-
     @GetMapping("/circuit-client/search")
     public NaverResponse callCircuitFeignClient(@RequestParam("query") String query) {
         return sampleCircuitFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build());
     }
 
+    @GetMapping("/reactive-client/search")
+    public Mono<NaverResponse> callReactiveFeignClient(@RequestParam("query") String query) {
+        Mono<NaverResponse> naverResponseMono = sampleReactiveFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build())
+                .map(data -> {
+                    log.info("in mono");
+                    return data;
+                });
+        log.info("test 입니다");
+        return naverResponseMono;
+    }
 
 }
