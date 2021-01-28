@@ -1,6 +1,7 @@
 package com.github.renuevo.feign.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.renuevo.common.NaverProperty;
 import com.github.renuevo.dto.NaverBlogParamDto;
 import com.github.renuevo.dto.NaverResponse;
@@ -9,6 +10,7 @@ import com.github.renuevo.feign.client.SampleCircuitFeignClient;
 import com.github.renuevo.feign.client.SampleFeignClient;
 import com.github.renuevo.feign.client.SampleReactiveFeignClient;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +30,7 @@ public class FeignClientController {
 
     @GetMapping("/client/search")
     public NaverResponse callSampleFeignClient(@RequestParam("query") String query) {
-        return sampleFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().testParam("test").query(query).start(1).display(10).sort("sim").build());
+        return sampleFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build());
     }
 
     @GetMapping("/build-client/search")
