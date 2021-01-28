@@ -6,6 +6,8 @@ import java.util.List;
 
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class NaverResponse {
     private String lastBuildDate;
     private int total;
