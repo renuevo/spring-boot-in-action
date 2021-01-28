@@ -1,10 +1,11 @@
 package com.github.renuevo.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Builder
 public class NaverResponse {
     private String lastBuildDate;
     private int total;

@@ -28,7 +28,7 @@ public class FeignClientController {
 
     @GetMapping("/client/search")
     public NaverResponse callSampleFeignClient(@RequestParam("query") String query) {
-        return sampleFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build());
+        return sampleFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().testParam("test").query(query).start(1).display(10).sort("sim").build());
     }
 
     @GetMapping("/build-client/search")
@@ -45,10 +45,10 @@ public class FeignClientController {
     public Mono<NaverResponse> callReactiveFeignClient(@RequestParam("query") String query) {
         Mono<NaverResponse> naverResponseMono = sampleReactiveFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build())
                 .map(data -> {
-                    log.info("in mono");
+                    log.info("2 : in mono");
                     return data;
                 });
-        log.info("test 입니다");
+        log.info("1 : first point");
         return naverResponseMono;
     }
 

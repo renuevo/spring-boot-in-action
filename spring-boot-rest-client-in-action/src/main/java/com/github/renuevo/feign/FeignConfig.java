@@ -1,5 +1,6 @@
 package com.github.renuevo.feign;
 
+import feign.Logger;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import org.springframework.beans.factory.ObjectFactory;
@@ -14,12 +15,13 @@ public class FeignConfig {
     private final ObjectFactory<HttpMessageConverters> messageConverters = HttpMessageConverters::new;
 
     @Bean
-    public Encoder decoder() {
+    Encoder encoder() {
         return new SpringEncoder(messageConverters);
     }
 
     @Bean
-    public Decoder encoder() {
+    Decoder decoder() {
         return new SpringDecoder(messageConverters);
     }
+
 }

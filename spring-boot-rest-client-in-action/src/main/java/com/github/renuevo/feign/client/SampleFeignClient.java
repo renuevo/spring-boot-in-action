@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-@FeignClient(name = "Sample-Feign-Client", url = "https://openapi.naver.com/v1/search")
+@FeignClient(name = "sample-feign-client", url = "https://openapi.naver.com/v1/search")
 public interface SampleFeignClient {
 
     @GetMapping(value = "blog.json")
