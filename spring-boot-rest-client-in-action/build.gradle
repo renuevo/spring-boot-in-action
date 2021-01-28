@@ -1,5 +1,5 @@
 ext {
-    set("springCloudVersion", "Hoxton.RELEASE")
+    set("springCloudVersion", "Hoxton.SR9")
     set("elasticsearch.version", "7.3.2")
 }
 
@@ -11,16 +11,11 @@ dependencyManagement {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    /*implementation("org.springframework.boot:spring-boot-starter-hateoas") {
-        exclude group: "org.springframework.boot", module: "spring-boot-starter-web"
-    }*/
 
     implementation("org.elasticsearch:elasticsearch:7.3.2")
     implementation("org.elasticsearch.client:elasticsearch-rest-high-level-client:7.3.2")
 
-    implementation("io.github.openfeign:feign-core:11.0")
-    implementation ("org.springframework.cloud:spring-cloud-starter-openfeign")
-    implementation("com.playtika.reactivefeign:feign-reactor-core:2.0.26")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign:2.2.6.RELEASE")
     implementation("com.playtika.reactivefeign:feign-reactor-spring-cloud-starter:2.0.26")
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
