@@ -35,7 +35,6 @@ public class ReactiveSpringQueryMapProcess implements AnnotatedParameterProcesso
         for (Field field : fields) {
             String name = field.getName();
             context.setParameterName(name);
-
             Collection<String> query = context.setTemplateParameter(name, data.template().queries().get(name));
             data.template().query(name, query);
         }
