@@ -1,4 +1,3 @@
-
 spring:
   main:
     banner-mode: 'off'
@@ -23,6 +22,7 @@ management.health.circuitbreakers.enabled: true
 logging:
   level:
     com.github.renuevo.feign.client: debug
+    reactivefeign.client.log: debug
 
 
 feign:
@@ -30,3 +30,12 @@ feign:
     config:
       default:
         loggerLevel: basic
+
+reactive:
+  feign:
+    logger:
+      enabled: true
+    ribbon:
+      enabled: false
+    hystrix:
+      enabled: false
