@@ -3,6 +3,7 @@ package com.github.renuevo.feign.client;
 
 import com.github.renuevo.dto.NaverBlogParamDto;
 import com.github.renuevo.dto.NaverResponse;
+import com.github.renuevo.feign.annotation.ReactiveSpringQueryMap;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -16,6 +17,7 @@ public interface SampleReactiveFeignClient {
     Mono<NaverResponse> naverBlogSearch(
             @RequestHeader("X-Naver-Client-Id") String id,
             @RequestHeader("X-Naver-Client-Secret") String secret,
-            @SpringQueryMap NaverBlogParamDto naverBlogParamDto);
+            @ReactiveSpringQueryMap("param_json") NaverBlogParamDto naverBlogParamDto,
+            @SpringQueryMap NaverBlogParamDto naverBlogParamDto2);
 
 }

@@ -1,16 +1,17 @@
-package com.github.renuevo.feign;
+package com.github.renuevo.feign.annotation;
 
 import feign.MethodMetadata;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.AnnotatedParameterProcessor;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 
 import static feign.Util.checkState;
 
+@Slf4j
 public class ReactiveSpringQueryMapProcess implements AnnotatedParameterProcessor {
     private static final Class<ReactiveSpringQueryMap> ANNOTATION = ReactiveSpringQueryMap.class;
 
@@ -31,13 +32,15 @@ public class ReactiveSpringQueryMapProcess implements AnnotatedParameterProcesso
             return true;
         }
 
-        Field[] fields = parameterType.getDeclaredFields();
-        for (Field field : fields) {
-            String name = field.getName();
-            context.setParameterName(name);
-            Collection<String> query = context.setTemplateParameter(name, data.template().queries().get(name));
-            data.template().query(name, query);
-        }
+        ReactiveSpringQueryMap reactiveSpringQueryMap = ANNOTATION.cast(annotation);
+        String name = reactiveSpringQueryMap.value();
+        context.setParameterName(name);
+        Collection<String> query = context.setTemplateParameter(name, data.template().queries().get(name));
+        data.template().query(name, query);
+
+        //class type not execute in feign client
+        //data.indexToExpanderClass().put(parameterIndex, ToJsonExpander.class);
+        data.indexToExpander().put(parameterIndex, new ToJsonExpander());
 
         return true;
     }

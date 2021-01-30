@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 
 @Getter
 @Builder
@@ -14,4 +16,5 @@ public class NaverBlogParamDto {
     private final Integer display;
     private final Integer start;
     private final String sort;
+    private final LocalDate dateTest;
 }
