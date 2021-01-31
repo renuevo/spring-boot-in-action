@@ -9,11 +9,11 @@ import java.lang.annotation.Target;
 
 
 /**
- * @see ReactiveSpringQueryMapProcess
+ * @see CustomParamAnnotationProcess
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ReactiveSpringQueryMap {
+public @interface CustomParam {
 
     @AliasFor("name")
     String value() default "";

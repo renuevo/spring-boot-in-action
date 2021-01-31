@@ -2,7 +2,7 @@ package com.github.renuevo.feign;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.renuevo.feign.annotation.ReactiveSpringQueryMapProcess;
+import com.github.renuevo.feign.annotation.CustomParamAnnotationProcess;
 import com.google.common.collect.Lists;
 import feign.Contract;
 import feign.QueryMapEncoder;
@@ -50,7 +50,7 @@ public class FeignConfig {
 
     @Bean
     Contract springMvcContractConfig() {
-        List<AnnotatedParameterProcessor> annotatedParameterProcessorList = Lists.newArrayList(new ReactiveSpringQueryMapProcess());
+        List<AnnotatedParameterProcessor> annotatedParameterProcessorList = Lists.newArrayList(new CustomParamAnnotationProcess());
         return new SpringMvcContract(annotatedParameterProcessorList);  //add custom annotation
     }
 

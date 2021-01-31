@@ -12,8 +12,8 @@ import java.util.Map;
 import static feign.Util.checkState;
 
 @Slf4j
-public class ReactiveSpringQueryMapProcess implements AnnotatedParameterProcessor {
-    private static final Class<ReactiveSpringQueryMap> ANNOTATION = ReactiveSpringQueryMap.class;
+public class CustomParamAnnotationProcess implements AnnotatedParameterProcessor {
+    private static final Class<CustomParam> ANNOTATION = CustomParam.class;
 
     @Override
     public Class<? extends Annotation> getAnnotationType() {
@@ -32,14 +32,19 @@ public class ReactiveSpringQueryMapProcess implements AnnotatedParameterProcesso
             return true;
         }
 
-        ReactiveSpringQueryMap reactiveSpringQueryMap = ANNOTATION.cast(annotation);
-        String name = reactiveSpringQueryMap.value();
+        CustomParam customParam = ANNOTATION.cast(annotation);
+        String name = customParam.value();
         context.setParameterName(name);
         Collection<String> query = context.setTemplateParameter(name, data.template().queries().get(name));
         data.template().query(name, query);
 
-        //class type not execute in feign client
-        //data.indexToExpanderClass().put(parameterIndex, ToJsonExpander.class);
+        /**
+         * class type not execute in feign client
+         * data.indexToExpanderClass().put(parameterIndex, ToJsonExpander.class);
+         *
+         * indexToExpander not working in reactive feign client
+         * result data format is name={key1: value1, key2: value2}
+         */
         data.indexToExpander().put(parameterIndex, new ToJsonExpander());
 
         return true;
