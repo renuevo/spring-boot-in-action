@@ -16,5 +16,4 @@ public class NaverBlogParamDto {
     private final Integer display;
     private final Integer start;
     private final String sort;
-    private final LocalDate dateTest;
 }

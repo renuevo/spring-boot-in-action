@@ -32,9 +32,8 @@ public class FeignClientController {
     private final NaverProperty naverProperty;
 
     @GetMapping("/client/search")
-    public NaverResponse callSampleFeignClient(@RequestParam("query") String query,@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return sampleFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().dateTest(date).query(query).start(1).display(10).sort("sim").build(),
-                NaverBlogParamDto.builder().dateTest(date).query(query).start(1).display(10).sort("sim").build());
+    public NaverResponse callSampleFeignClient(@RequestParam("query") String query) {
+        return sampleFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build());
     }
 
     @GetMapping("/build-client/search")
@@ -48,9 +47,8 @@ public class FeignClientController {
     }
 
     @GetMapping("/reactive-client/search")
-    public Mono<NaverResponse> callReactiveFeignClient(@RequestParam("query") String query, @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        Mono<NaverResponse> naverResponseMono = sampleReactiveFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), NaverBlogParamDto.builder().dateTest(date).query(query).start(1).display(10).sort("sim").build(),
-                NaverBlogParamDto.builder().dateTest(date).query(query).start(1).display(10).sort("sim").build())
+    public Mono<NaverResponse> callReactiveFeignClient(@RequestParam("query") String query) {
+        Mono<NaverResponse> naverResponseMono = sampleReactiveFeignClient.naverBlogSearch(naverProperty.getId(), naverProperty.getSecret(), queryMapEncoder.encode(NaverBlogParamDto.builder().query(query).start(1).display(10).sort("sim").build()))
                 .map(data -> {
                     log.info("2 : in mono");
                     return data;

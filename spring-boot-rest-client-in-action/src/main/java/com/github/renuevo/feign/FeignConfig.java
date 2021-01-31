@@ -36,6 +36,12 @@ public class FeignConfig {
         return new SpringDecoder(messageConverters);
     }
 
+
+    /**
+     *  내부 QueryMap의 대한 Encoder 지정
+     *  default는 {@link feign.querymap.FieldQueryMapEncoder}
+     *  ReactiveFeignClient에서는 Encoder Override가 불가능함
+     */
     @Bean
     QueryMapEncoder queryMapEncoder(ObjectMapper objectMapper) {
         return object -> objectMapper.convertValue(object, new TypeReference<Map<String, Object>>() {

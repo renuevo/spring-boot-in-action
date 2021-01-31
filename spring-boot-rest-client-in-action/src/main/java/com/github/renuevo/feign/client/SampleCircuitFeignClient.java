@@ -15,7 +15,7 @@ public class SampleCircuitFeignClient {
 
     @CircuitBreaker(name = "Sample-Circuit-Feign-Client", fallbackMethod = "fallback")
     public NaverResponse naverBlogSearch(String id, String secret, NaverBlogParamDto naverBlogParamDto) {
-        return sampleFeignClient.naverBlogSearch(id, secret, naverBlogParamDto,naverBlogParamDto);
+        return sampleFeignClient.naverBlogSearch(id, secret, naverBlogParamDto);
     }
 
     public NaverResponse fallback(String id, String secret, NaverBlogParamDto naverBlogParamDto, Exception exception) {

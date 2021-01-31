@@ -16,8 +16,6 @@ public interface SampleFeignClient {
     NaverResponse naverBlogSearch(
             @RequestHeader("X-Naver-Client-Id") String id,
             @RequestHeader("X-Naver-Client-Secret") String secret,
-            @ReactiveSpringQueryMap("param_json") NaverBlogParamDto naverBlogParamDto,
-            @SpringQueryMap NaverBlogParamDto naverBlogParamDto2
-    );
+            @SpringQueryMap NaverBlogParamDto naverBlogParamDto);
 
 }
