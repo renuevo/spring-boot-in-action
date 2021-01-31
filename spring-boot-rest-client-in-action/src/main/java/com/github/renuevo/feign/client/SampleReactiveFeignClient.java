@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
-@ReactiveFeignClient(name = "Sample-Reactive-Feign-Client", url = "https://openapi.naver.com/v1/search")
+@ReactiveFeignClient(name = "Sample-Reactive-Feign-Client", url = "${naver.url.search}")
 public interface SampleReactiveFeignClient {
 
     @GetMapping(value = "blog.json")

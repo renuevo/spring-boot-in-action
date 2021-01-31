@@ -5,6 +5,8 @@ import feign.Feign;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,21 +20,21 @@ import org.springframework.context.annotation.Import;
  * </pre>
  */
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Import(FeignClientsConfiguration.class)
-public class SampleFeignClientConfig {
+public class SampleFeignClientBuild {
 
     private final Encoder encoder;
     private final Decoder decoder;
     private final Contract contract;
 
     @Bean
-    public SampleBuildFeignClient recruitSearchClient() {
+    public SampleBuildFeignClient recruitSearchClient(@Value("${naver.url.search}") String searchUrl) {
         //https://github.com/OpenFeign/feign#dynamic-query-parameters
         return Feign.builder()
                 .encoder(encoder)
                 .decoder(decoder)
                 .contract(contract)
-                .target(SampleBuildFeignClient.class, "https://openapi.naver.com/v1/search");
+                .target(SampleBuildFeignClient.class, searchUrl);
     }
 }

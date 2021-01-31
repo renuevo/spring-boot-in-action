@@ -8,6 +8,8 @@ naver:
   client:
     id: ${naver.id:NONE}
     secret: ${naver.secret:NONE}
+  url:
+    search: https://openapi.naver.com/v1/search
 
 search:
   es-host: localhost
@@ -39,3 +41,8 @@ reactive:
       enabled: false
     hystrix:
       enabled: false
+    loadbalancer:
+      enabled: false
+    circuit:
+      breaker:
+        enabled: false
