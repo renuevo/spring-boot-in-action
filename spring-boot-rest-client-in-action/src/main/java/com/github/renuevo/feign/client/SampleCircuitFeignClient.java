@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class SampleCircuitFeignClient {
     private final SampleFeignClient sampleFeignClient;
 
-    @CircuitBreaker(name = "Sample-Circuit-Feign-Client", fallbackMethod = "fallback")
+    @CircuitBreaker(name = "sample-circuit-feign-client", fallbackMethod = "fallback")
     public NaverResponse naverBlogSearch(String id, String secret, NaverBlogParamDto naverBlogParamDto) {
         return sampleFeignClient.naverBlogSearch(id, secret, naverBlogParamDto);
     }

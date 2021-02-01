@@ -32,17 +32,14 @@ feign:
     config:
       default:
         loggerLevel: basic
+        errorDecoder: com.github.renuevo.feign.config.FeignErrorDecoder
 
 reactive:
   feign:
-    logger:
-      enabled: true
-    ribbon:
+    client:
+      config:
+        default:
+          # statusHandler: com.github.renuevo.feign.config.ReactiveFeignErrorDecoder
+          errorDecoder: com.github.renuevo.feign.config.FeignErrorDecoder   # 기존 ErrorDecoder 사용 가능 statusHandler가 있을 시 statusHandler 우선
+    cloud:
       enabled: false
-    hystrix:
-      enabled: false
-    loadbalancer:
-      enabled: false
-    circuit:
-      breaker:
-        enabled: false

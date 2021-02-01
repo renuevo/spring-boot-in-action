@@ -9,6 +9,7 @@ import feign.QueryMapEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -22,6 +23,8 @@ public class FeignClientController {
     private final SampleBuildFeignClient sampleBuildFeignClient;
     private final SampleCircuitFeignClient sampleCircuitFeignClient;
     private final SampleReactiveFeignClient sampleReactiveFeignClient;
+    private final SampleErrorFeignClient sampleErrorFeignClient;
+    private final SampleErrorReactiveFeignClient sampleErrorReactiveFeignClient;
     private final QueryMapEncoder queryMapEncoder;
     private final NaverProperty naverProperty;
 
@@ -49,6 +52,34 @@ public class FeignClientController {
                 });
         log.info("1 : first point");
         return naverResponseMono;
+    }
+
+    @GetMapping("/client/error/{code}")
+    public void callErrorClient(@PathVariable("code") Integer code) {
+        switch (code) {
+            case 400:
+                sampleErrorFeignClient.get400();
+                break;
+            case 500:
+            default:
+                sampleErrorFeignClient.get500();
+                break;
+        }
+    }
+
+    @GetMapping("/reactive-client/error/{code}")
+    public Mono<String> callErrorReactiveClient(@PathVariable("code") Integer code) {
+        Mono<String> callClient;
+        switch (code) {
+            case 400:
+                callClient = sampleErrorReactiveFeignClient.get400();
+                break;
+            case 500:
+            default:
+                callClient = sampleErrorReactiveFeignClient.get500();
+                break;
+        }
+        return callClient;
     }
 
 }
