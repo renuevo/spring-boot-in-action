@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("error")
-public class FeingErrorClientContorller {
+public class FeignErrorClientController {
 
     private final SampleErrorFeignClient sampleErrorFeignClient;
     private final SampleErrorReactiveFeignClient sampleErrorReactiveFeignClient;
