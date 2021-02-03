@@ -3,6 +3,7 @@ package com.github.renuevo.feign.controller;
 import com.github.renuevo.feign.client.error.SampleErrorFeignClient;
 import com.github.renuevo.feign.client.error.SampleErrorReactiveFeignClient;
 import com.github.renuevo.feign.client.error.SampleErrorRetryFeignClient;
+import com.github.renuevo.feign.client.error.SampleErrorRetryReactiveFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ public class FeingErrorClientContorller {
     private final SampleErrorFeignClient sampleErrorFeignClient;
     private final SampleErrorReactiveFeignClient sampleErrorReactiveFeignClient;
     private final SampleErrorRetryFeignClient sampleErrorRetryFeignClient;
+    private final SampleErrorRetryReactiveFeignClient sampleErrorRetryReactiveFeignClient;
 
 
     @GetMapping("/client/{code}")
@@ -37,17 +39,13 @@ public class FeingErrorClientContorller {
 
     @GetMapping("/reactive-client/{code}")
     public Mono<String> callErrorReactiveClient(@PathVariable("code") Integer code) {
-        Mono<String> callClient;
         switch (code) {
             case 400:
-                callClient = sampleErrorReactiveFeignClient.get400();
-                break;
+                return sampleErrorReactiveFeignClient.get400();
             case 500:
             default:
-                callClient = sampleErrorReactiveFeignClient.get500();
-                break;
+                return sampleErrorReactiveFeignClient.get500();
         }
-        return callClient;
     }
 
     @GetMapping("/retry-client/{code}")
@@ -60,6 +58,17 @@ public class FeingErrorClientContorller {
             default:
                 sampleErrorRetryFeignClient.get500();
                 break;
+        }
+    }
+
+    @GetMapping("/reactive-retry-client/{code}")
+    public Mono<String> callErrorReactiveRetryClient(@PathVariable("code") Integer code) {
+        switch (code) {
+            case 400:
+                return sampleErrorRetryReactiveFeignClient.get400().retry(3);
+            case 500:
+            default:
+                return sampleErrorRetryReactiveFeignClient.get500().retry(3);
         }
     }
 

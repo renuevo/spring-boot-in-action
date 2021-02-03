@@ -20,7 +20,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aop")
-    implementation("io.github.resilience4j:resilience4j-spring-boot2:1.2.0")
+    implementation("io.github.resilience4j:resilience4j-spring-boot2:1.7.0")
 
     implementation("com.fasterxml.jackson.core:jackson-core:2.11.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.11.0")
