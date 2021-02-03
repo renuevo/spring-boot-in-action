@@ -1,4 +1,4 @@
-package com.github.renuevo.feign.client;
+package com.github.renuevo.feign.client.error;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import reactivefeign.spring.config.ReactiveFeignClient;

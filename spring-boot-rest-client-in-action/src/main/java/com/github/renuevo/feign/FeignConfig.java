@@ -6,6 +6,7 @@ import com.github.renuevo.feign.annotation.CustomParamAnnotationProcess;
 import com.google.common.collect.Lists;
 import feign.Contract;
 import feign.QueryMapEncoder;
+import feign.Retryer;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 import java.util.Map;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Slf4j
 @Configuration
@@ -52,6 +55,11 @@ public class FeignConfig {
     Contract springMvcContractConfig() {
         List<AnnotatedParameterProcessor> annotatedParameterProcessorList = Lists.newArrayList(new CustomParamAnnotationProcess());
         return new SpringMvcContract(annotatedParameterProcessorList);  //add custom annotation
+    }
+
+    @Bean
+    Retryer retryer(){
+        return new Retryer.Default(100, SECONDS.toMillis(1), 3);
     }
 
 }

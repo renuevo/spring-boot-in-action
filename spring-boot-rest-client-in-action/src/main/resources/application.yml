@@ -33,6 +33,10 @@ feign:
       default:
         loggerLevel: basic
         errorDecoder: com.github.renuevo.feign.config.FeignErrorDecoder
+      error-retry-client:
+        loggerLevel: basic
+        errorDecoder: com.github.renuevo.feign.config.FeignRetryErrorDecoder
+
 
 reactive:
   feign:

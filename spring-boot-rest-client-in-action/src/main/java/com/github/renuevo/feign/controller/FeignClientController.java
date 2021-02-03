@@ -4,27 +4,27 @@ package com.github.renuevo.feign.controller;
 import com.github.renuevo.common.NaverProperty;
 import com.github.renuevo.dto.NaverBlogParamDto;
 import com.github.renuevo.dto.NaverResponse;
-import com.github.renuevo.feign.client.*;
+import com.github.renuevo.feign.client.SampleBuildFeignClient;
+import com.github.renuevo.feign.client.SampleCircuitFeignClient;
+import com.github.renuevo.feign.client.SampleFeignClient;
+import com.github.renuevo.feign.client.SampleReactiveFeignClient;
 import feign.QueryMapEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @Slf4j
-@RestController
 @RequiredArgsConstructor
+@RestController
 public class FeignClientController {
 
     private final SampleFeignClient sampleFeignClient;
     private final SampleBuildFeignClient sampleBuildFeignClient;
     private final SampleCircuitFeignClient sampleCircuitFeignClient;
     private final SampleReactiveFeignClient sampleReactiveFeignClient;
-    private final SampleErrorFeignClient sampleErrorFeignClient;
-    private final SampleErrorReactiveFeignClient sampleErrorReactiveFeignClient;
     private final QueryMapEncoder queryMapEncoder;
     private final NaverProperty naverProperty;
 
@@ -52,34 +52,6 @@ public class FeignClientController {
                 });
         log.info("1 : first point");
         return naverResponseMono;
-    }
-
-    @GetMapping("/client/error/{code}")
-    public void callErrorClient(@PathVariable("code") Integer code) {
-        switch (code) {
-            case 400:
-                sampleErrorFeignClient.get400();
-                break;
-            case 500:
-            default:
-                sampleErrorFeignClient.get500();
-                break;
-        }
-    }
-
-    @GetMapping("/reactive-client/error/{code}")
-    public Mono<String> callErrorReactiveClient(@PathVariable("code") Integer code) {
-        Mono<String> callClient;
-        switch (code) {
-            case 400:
-                callClient = sampleErrorReactiveFeignClient.get400();
-                break;
-            case 500:
-            default:
-                callClient = sampleErrorReactiveFeignClient.get500();
-                break;
-        }
-        return callClient;
     }
 
 }
