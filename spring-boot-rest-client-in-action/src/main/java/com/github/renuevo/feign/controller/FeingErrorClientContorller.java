@@ -4,6 +4,7 @@ import com.github.renuevo.feign.client.error.SampleErrorFeignClient;
 import com.github.renuevo.feign.client.error.SampleErrorReactiveFeignClient;
 import com.github.renuevo.feign.client.error.SampleErrorRetryFeignClient;
 import com.github.renuevo.feign.client.error.SampleErrorRetryReactiveFeignClient;
+import feign.RetryableException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,10 +66,10 @@ public class FeingErrorClientContorller {
     public Mono<String> callErrorReactiveRetryClient(@PathVariable("code") Integer code) {
         switch (code) {
             case 400:
-                return sampleErrorRetryReactiveFeignClient.get400().retry(3);
+                return sampleErrorRetryReactiveFeignClient.get400().retry(3, e -> e instanceof RetryableException);
             case 500:
             default:
-                return sampleErrorRetryReactiveFeignClient.get500().retry(3);
+                return sampleErrorRetryReactiveFeignClient.get500().retry(3, e -> e instanceof RetryableException);
         }
     }
 
