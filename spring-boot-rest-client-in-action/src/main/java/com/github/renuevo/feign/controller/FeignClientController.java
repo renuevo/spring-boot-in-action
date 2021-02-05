@@ -4,10 +4,8 @@ package com.github.renuevo.feign.controller;
 import com.github.renuevo.common.NaverProperty;
 import com.github.renuevo.dto.NaverBlogParamDto;
 import com.github.renuevo.dto.NaverResponse;
-import com.github.renuevo.feign.client.SampleBuildFeignClient;
-import com.github.renuevo.feign.client.SampleCircuitFeignClient;
-import com.github.renuevo.feign.client.SampleFeignClient;
-import com.github.renuevo.feign.client.SampleReactiveFeignClient;
+import com.github.renuevo.dto.PostRequest;
+import com.github.renuevo.feign.client.*;
 import feign.QueryMapEncoder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +23,10 @@ public class FeignClientController {
     private final SampleBuildFeignClient sampleBuildFeignClient;
     private final SampleCircuitFeignClient sampleCircuitFeignClient;
     private final SampleReactiveFeignClient sampleReactiveFeignClient;
+
+    private final SampleLocalFeignClient sampleLocalFeignClient;
+    private final SampleReactiveLocalFeignClient sampleReactiveLocalFeignClient;
+
     private final QueryMapEncoder queryMapEncoder;
     private final NaverProperty naverProperty;
 
@@ -54,4 +56,35 @@ public class FeignClientController {
         return naverResponseMono;
     }
 
+    @GetMapping("/client/post")
+    public String callPostFeignClient() {
+        return sampleLocalFeignClient.postCall(PostRequest.builder()
+                .data("data")
+                .dataMessage("message")
+                .build());
+    }
+
+    @GetMapping("/client/post-map")
+    public String callMapPostFeignClient() {
+        return sampleLocalFeignClient.postMapCall(queryMapEncoder.encode(PostRequest.builder()
+                .data("data")
+                .dataMessage("message")
+                .build()));
+    }
+
+    @GetMapping("/reactive-client/post")
+    public Mono<String> callReactivePostFeignClient() {
+        return sampleReactiveLocalFeignClient.postCall(PostRequest.builder()
+                .data("data")
+                .dataMessage("message")
+                .build());
+    }
+
+    @GetMapping("/reactive-client/post-map")
+    public Mono<String> callReactiveMapPostFeignClient() {
+        return sampleReactiveLocalFeignClient.postMapCall(queryMapEncoder.encode(PostRequest.builder()
+                .data("data")
+                .dataMessage("message")
+                .build()));
+    }
 }

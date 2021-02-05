@@ -1,9 +1,12 @@
 package com.github.renuevo.common.controller;
 
 import com.github.renuevo.common.ErrorResponse;
+import com.github.renuevo.dto.PostRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,6 +35,11 @@ public class CommonController {
                         .errorMessage("400 에러가 발생 했습니다")
                         .build()
                 );
+    }
+
+    @PostMapping("post")
+    public String postCommonResponse(@RequestBody PostRequest postRequest) {
+        return postRequest.toString();
     }
 
 }
