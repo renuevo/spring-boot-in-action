@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CommonController {
 
-    @GetMapping("get500")
+    @GetMapping("/get500")
     public ResponseEntity<ErrorResponse> getInternalError() {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -25,7 +25,7 @@ public class CommonController {
     }
 
 
-    @GetMapping("get400")
+    @GetMapping("/get400")
     public ResponseEntity<ErrorResponse> getBadrequestError() {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -37,9 +37,14 @@ public class CommonController {
                 );
     }
 
-    @PostMapping("post")
+    @PostMapping("/post")
     public String postCommonResponse(@RequestBody PostRequest postRequest) {
         return postRequest.toString();
+    }
+
+    @GetMapping("/timeout")
+    public String test(){
+        return "test";
     }
 
 }

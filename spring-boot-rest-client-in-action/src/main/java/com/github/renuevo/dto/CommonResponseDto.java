@@ -1,4 +1,4 @@
 package com.github.renuevo.dto;
 
-public class commonResponseDto {
+public class CommonResponseDto {
 }
