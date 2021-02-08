@@ -44,6 +44,9 @@ reactive:
       config:
         default:
           # statusHandler: com.github.renuevo.feign.config.ReactiveFeignErrorDecoder
+          options:
+            connectTimeoutMillis: 10000
+            readTimeoutMillis: 3000
           errorDecoder: com.github.renuevo.feign.config.FeignErrorDecoder   # 기존 ErrorDecoder 사용 가능 statusHandler가 있을 시 statusHandler 우선
         sample-error-reactive-retry-feign-client:
           errorDecoder: com.github.renuevo.feign.config.FeignRetryErrorDecoder
