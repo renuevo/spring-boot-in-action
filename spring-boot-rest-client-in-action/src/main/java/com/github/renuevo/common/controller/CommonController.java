@@ -2,6 +2,7 @@ package com.github.renuevo.common.controller;
 
 import com.github.renuevo.common.ErrorResponse;
 import com.github.renuevo.dto.PostRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +44,20 @@ public class CommonController {
     }
 
     @GetMapping("/timeout")
-    public String test(){
+    public String test() {
         return "test";
+    }
+
+    @GetMapping("/camel/test")
+    public ResponseEntity<String> camelTest() {
+        HttpHeaders responseHeaders = new HttpHeaders(); responseHeaders.add("Content-Type", "application/json;");
+        return new ResponseEntity<>("{\"testName\" : \"test\"}", responseHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("/snake/test")
+    public ResponseEntity<String> snakeTest() {
+        HttpHeaders responseHeaders = new HttpHeaders(); responseHeaders.add("Content-Type", "application/json;");
+        return new ResponseEntity<>("{\"test_name\" : \"test\"}", responseHeaders, HttpStatus.OK);
     }
 
 }

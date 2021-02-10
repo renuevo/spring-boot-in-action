@@ -1,9 +1,6 @@
 package com.github.renuevo.feign.controller;
 
-import com.github.renuevo.feign.client.error.SampleErrorFeignClient;
-import com.github.renuevo.feign.client.error.SampleErrorReactiveFeignClient;
-import com.github.renuevo.feign.client.error.SampleErrorRetryFeignClient;
-import com.github.renuevo.feign.client.error.SampleErrorRetryReactiveFeignClient;
+import com.github.renuevo.feign.client.error.*;
 import feign.RetryableException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +20,7 @@ public class FeignErrorClientController {
     private final SampleErrorReactiveFeignClient sampleErrorReactiveFeignClient;
     private final SampleErrorRetryFeignClient sampleErrorRetryFeignClient;
     private final SampleErrorRetryReactiveFeignClient sampleErrorRetryReactiveFeignClient;
+    private final SampleErrorReactiveFeignCustomClient sampleErrorReactiveFeignCustomClient;
 
 
     @GetMapping("/client/{code}")
@@ -70,6 +68,18 @@ public class FeignErrorClientController {
             case 500:
             default:
                 return sampleErrorRetryReactiveFeignClient.get500().retry(3, e -> e instanceof RetryableException);
+        }
+    }
+
+
+    @GetMapping("/custom-reactive-client/{code}")
+    public Mono<String> callErrorCustomReactiveClient(@PathVariable("code") Integer code) {
+        switch (code) {
+            case 400:
+                return sampleErrorReactiveFeignCustomClient.get400();
+            case 500:
+            default:
+                return sampleErrorReactiveFeignCustomClient.get500();
         }
     }
 

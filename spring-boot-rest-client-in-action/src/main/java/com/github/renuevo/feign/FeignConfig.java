@@ -41,9 +41,9 @@ public class FeignConfig {
 
 
     /**
-     *  내부 QueryMap의 대한 Encoder 지정
-     *  default는 {@link feign.querymap.FieldQueryMapEncoder}
-     *  ReactiveFeignClient에서는 Encoder Override가 불가능함
+     * 내부 QueryMap의 대한 Encoder 지정
+     * default는 {@link feign.querymap.FieldQueryMapEncoder}
+     * ReactiveFeignClient에서는 Encoder Override가 불가능함
      */
     @Bean
     QueryMapEncoder queryMapEncoder(ObjectMapper objectMapper) {
@@ -58,7 +58,7 @@ public class FeignConfig {
     }
 
     @Bean
-    Retryer retryer(){
+    Retryer retryer() {
         return new Retryer.Default(100, SECONDS.toMillis(1), 3);
     }
 

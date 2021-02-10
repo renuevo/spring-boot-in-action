@@ -2,6 +2,7 @@ package com.github.renuevo.feign.controller;
 
 
 import com.github.renuevo.common.NaverProperty;
+import com.github.renuevo.common.TestResponse;
 import com.github.renuevo.dto.NaverBlogParamDto;
 import com.github.renuevo.dto.NaverResponse;
 import com.github.renuevo.dto.PostRequest;
@@ -55,6 +56,18 @@ public class FeignClientController {
         log.info("1 : first point");
         return naverResponseMono;
     }
+
+
+    @GetMapping("/reactive-client/camel")
+    public Mono<TestResponse> callReactiveFeignClientCamel() {
+        return sampleReactiveLocalFeignClient.camelCall();
+    }
+
+    @GetMapping("/reactive-client/snake")
+    public Mono<TestResponse> callReactiveFeignClientSnake() {
+        return sampleReactiveLocalFeignClient.snakeCall();
+    }
+
 
     @GetMapping("/client/post")
     public String callPostFeignClient() {
