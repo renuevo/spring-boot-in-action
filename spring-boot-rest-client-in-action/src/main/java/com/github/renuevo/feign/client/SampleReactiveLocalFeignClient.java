@@ -13,6 +13,7 @@ import java.util.Map;
 
 @ReactiveFeignClient(name = "sample-local-reactive-feign-client", url = "http://localhost:8080", configuration = ReactiveFeignConfig.class)
 public interface SampleReactiveLocalFeignClient {
+
     @PostMapping("/post")
     Mono<String> postCall(PostRequest postRequest);
 
@@ -24,6 +25,5 @@ public interface SampleReactiveLocalFeignClient {
 
     @GetMapping("/snake/test")
     Mono<TestResponse> snakeCall();
-
 
 }

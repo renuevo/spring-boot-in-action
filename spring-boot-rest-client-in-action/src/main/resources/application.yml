@@ -2,7 +2,8 @@ spring:
   main:
     banner-mode: 'off'
     allow-bean-definition-overriding: true
-#    allow-bean-definition-overriding: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
 naver:
   client:
