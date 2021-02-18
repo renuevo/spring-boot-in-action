@@ -3,10 +3,12 @@ package com.github.renuevo.webclient.controller;
 import com.github.renuevo.dto.NaverBlogParamDto;
 import com.github.renuevo.dto.NaverResponse;
 import com.github.renuevo.webclient.config.WebClientQueryEncoder;
-import feign.QueryMapEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
