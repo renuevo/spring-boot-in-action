@@ -1,8 +1,6 @@
 dependencies {
     compile group: 'io.lettuce', name: 'lettuce-core', version: '5.3.3.RELEASE'
-    compile group: 'org.springframework.data', name: 'spring-data-redis', version: '2.1.9.RELEASE'
+    compile group: 'org.springframework.data', name: 'spring-data-redis'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
