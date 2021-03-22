@@ -1,23 +1,19 @@
 package com.github.renuevo.n_plus_one;
 
 import com.google.common.collect.Lists;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.List;
 
-import static org.junit.Assert.assertThat;
-
-@RunWith(SpringRunner.class)
 @SpringBootTest
-public class AcademyServiceTest {
+class AcademyServiceTest {
 
     @Autowired
     private AcademyRepository academyRepository;
@@ -26,14 +22,14 @@ public class AcademyServiceTest {
     private AcademyService academyService;
 
 
-    @After
-    public void cleanAll() {
+    @AfterEach
+    void cleanAll() {
         academyRepository.deleteAll();
     }
 
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         List<Academy> academies = Lists.newArrayList();
 
         for (int i = 0; i < 10; i++) {
@@ -49,7 +45,7 @@ public class AcademyServiceTest {
     }
 
     @Test
-    public void Academy여러개를_조회시_Subject가_N1_쿼리가발생한다() throws Exception {
+    void Academy여러개를_조회시_Subject가_N1_쿼리가발생한다() throws Exception {
         //given
         List<String> subjectNames = academyService.findAllSubjectNames();
 
@@ -59,7 +55,7 @@ public class AcademyServiceTest {
 
 
     @Test
-    public void Academy_join_fetch사용() throws Exception {
+    void Academy_join_fetch사용() throws Exception {
         //given
         List<String> subjectNames = academyService.findJoinAllSubjectNames();
 
