@@ -6,9 +6,9 @@ import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 public class RestTemplateConfig {
 
     @Bean("componentsClientRestTemplate")
-    RestTemplate componentsClientRestTemplate(NaverProperty naverProperty) {
+    public RestTemplate componentsClientRestTemplate(NaverProperty naverProperty) {
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
         factory.setConnectTimeout(1000);  //1초
         factory.setReadTimeout(1000);     //1초
@@ -34,8 +34,9 @@ public class RestTemplateConfig {
         return new RestTemplate(factory);
     }
 
+    @Primary
     @Bean("simpleClientRestTemplate")
-    RestTemplate simpleClientRestTemplate() {
+    public RestTemplate simpleClientRestTemplate() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(1000);    //1초
         factory.setReadTimeout(1000);   //1초
