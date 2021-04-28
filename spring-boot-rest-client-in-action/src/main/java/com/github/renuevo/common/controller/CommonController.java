@@ -1,6 +1,7 @@
 package com.github.renuevo.common.controller;
 
 import com.github.renuevo.common.ErrorResponse;
+import com.github.renuevo.common.TestResponseKotlin;
 import com.github.renuevo.dto.PostRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -58,6 +59,11 @@ public class CommonController {
     public ResponseEntity<String> snakeTest() {
         HttpHeaders responseHeaders = new HttpHeaders(); responseHeaders.add("Content-Type", "application/json;");
         return new ResponseEntity<>("{\"test_name\" : \"test\"}", responseHeaders, HttpStatus.OK);
+    }
+
+    @GetMapping("/kotlin-response")
+    public TestResponseKotlin testKotlinResponse(){
+        return new TestResponseKotlin("rubber","duck");
     }
 
 }

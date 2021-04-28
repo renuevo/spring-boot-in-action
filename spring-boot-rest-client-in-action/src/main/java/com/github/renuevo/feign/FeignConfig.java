@@ -1,7 +1,10 @@
 package com.github.renuevo.feign;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.module.kotlin.KotlinModule;
 import com.github.renuevo.feign.annotation.CustomParamAnnotationProcess;
 import com.google.common.collect.Lists;
 import feign.Contract;
@@ -18,6 +21,7 @@ import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +31,17 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 @Slf4j
 @Configuration
 public class FeignConfig {
-    private final ObjectFactory<HttpMessageConverters> messageConverters = HttpMessageConverters::new;
+
+    private final ObjectFactory<HttpMessageConverters> messageConverters;
+
+    public FeignConfig() {
+        ObjectMapper mapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+                .registerModule(new KotlinModule());
+        MappingJackson2HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter(mapper);
+        messageConverters = () -> new HttpMessageConverters(jacksonConverter);
+    }
 
     @Bean
     Encoder encoder() {

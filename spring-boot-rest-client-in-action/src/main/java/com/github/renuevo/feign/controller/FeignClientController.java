@@ -3,6 +3,7 @@ package com.github.renuevo.feign.controller;
 
 import com.github.renuevo.common.NaverProperty;
 import com.github.renuevo.common.TestResponse;
+import com.github.renuevo.common.TestResponseKotlin;
 import com.github.renuevo.dto.NaverBlogParamDto;
 import com.github.renuevo.dto.NaverResponse;
 import com.github.renuevo.dto.PostRequest;
@@ -99,5 +100,10 @@ public class FeignClientController {
                 .data("data")
                 .dataMessage("message")
                 .build()));
+    }
+
+    @GetMapping("/test-kotlin-response")
+    public TestResponseKotlin testKotlinResponse() {
+        return sampleLocalFeignClient.testKotlinResponse();
     }
 }
