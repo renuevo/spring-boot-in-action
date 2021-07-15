@@ -1,4 +1,4 @@
-package com.github.renuevo.feign;
+package com.github.renuevo.feign.config;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
