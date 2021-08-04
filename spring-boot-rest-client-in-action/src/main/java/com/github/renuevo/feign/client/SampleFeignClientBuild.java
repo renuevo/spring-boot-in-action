@@ -6,10 +6,8 @@ import feign.codec.Decoder;
 import feign.codec.Encoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 /**
  * <pre>
@@ -20,7 +18,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @RequiredArgsConstructor
-@Import(FeignClientsConfiguration.class)
+//@Import(FeignConfig.class)
 public class SampleFeignClientBuild {
 
     private final Encoder encoder;

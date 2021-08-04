@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -103,7 +105,7 @@ public class FeignClientController {
     }
 
     @GetMapping("/test-kotlin-response")
-    public TestResponseKotlin testKotlinResponse() {
+    public List<TestResponseKotlin> testKotlinResponse() {
         return sampleLocalFeignClient.testKotlinResponse();
     }
 }

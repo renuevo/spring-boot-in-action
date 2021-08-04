@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
 import java.util.Map;
 
 @FeignClient(name = "sample-local-feign-client", url = "http://localhost:8080")
@@ -18,6 +19,6 @@ public interface SampleLocalFeignClient {
     String postMapCall(Map<String, Object> postRequestMap);
 
     @GetMapping("/kotlin-response")
-    TestResponseKotlin testKotlinResponse();
+    List<TestResponseKotlin> testKotlinResponse();
 
 }
