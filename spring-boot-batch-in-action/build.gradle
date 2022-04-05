@@ -3,6 +3,10 @@ repositories {
     maven { url 'https://jitpack.io' } //add repositories
 }
 
+ext {
+    set("elasticsearch.version", "7.3.2")
+}
+
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'

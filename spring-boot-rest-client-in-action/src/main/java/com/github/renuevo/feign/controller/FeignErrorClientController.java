@@ -1,7 +1,6 @@
 package com.github.renuevo.feign.controller;
 
 import com.github.renuevo.feign.client.error.*;
-import feign.RetryableException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,10 +63,10 @@ public class FeignErrorClientController {
     public Mono<String> callErrorReactiveRetryClient(@PathVariable("code") Integer code) {
         switch (code) {
             case 400:
-                return sampleErrorRetryReactiveFeignClient.get400().retry(3, e -> e instanceof RetryableException);
+                return sampleErrorRetryReactiveFeignClient.get400().retry(3);
             case 500:
             default:
-                return sampleErrorRetryReactiveFeignClient.get500().retry(3, e -> e instanceof RetryableException);
+                return sampleErrorRetryReactiveFeignClient.get500().retry(3);
         }
     }
 

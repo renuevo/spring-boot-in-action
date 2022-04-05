@@ -45,7 +45,7 @@ public class ElasticRestClientConfig {
         });
 
         return RestClient.builder(httpHostList.toArray(new HttpHost[0]))
-                .setMaxRetryTimeoutMillis(10000)
+                //.setMaxRetryTimeoutMillis(10000)
                 .setDefaultHeaders(headers);
     }
 

@@ -2,26 +2,24 @@ package com.github.renuevo;
 
 
 import com.github.renuevo.domain.order.OrderDataModel;
-import com.github.renuevo.repo.order.JpaOrderRepository;
 import com.github.renuevo.repo.order.OrderMapper;
 import com.github.renuevo.repo.order.OrderRdbRepository;
 import com.github.renuevo.repo.store.JpaStoreRepository;
 import com.github.renuevo.repo.store.Store;
-import com.github.renuevo.repo.store.StoreRdbRepository;
 import com.github.renuevo.setup.OrderHistoryBuilder;
 import com.github.renuevo.setup.StoreBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 class SpringBootEventApplicationTests {
 
     @Autowired

@@ -1,6 +1,6 @@
 dependencies {
-    compile group: 'io.lettuce', name: 'lettuce-core', version: '5.3.3.RELEASE'
-    compile group: 'org.springframework.data', name: 'spring-data-redis'
+    implementation 'io.lettuce:lettuce-core:6.1.8.RELEASE'
+    implementation group: 'org.springframework.data', name: 'spring-data-redis'
 
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 }

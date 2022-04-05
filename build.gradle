@@ -1,7 +1,7 @@
 buildscript {
     ext {
-        springBootVersion = '2.3.8.RELEASE'
-        kotlinVersion = '1.3.72'
+        springBootVersion = '2.6.6'
+        kotlinVersion = '1.6.20'
     }
     repositories {
         mavenCentral()
@@ -43,6 +43,10 @@ subprojects {
                 it.mkdirs()
             }
         }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     dependencies {
