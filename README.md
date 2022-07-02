@@ -47,5 +47,9 @@ Springboot를 개발 공부를 정리 하는 용도의 Project
 
 <br/>
 
-끝! 
-이제 코틀린 프로젝트로..🚀
+[Spring Jpa](https://github.com/renuevo/spring-boot-in-action/tree/master/spring-boot-jpa-in-action)
+> spring jpa 기본 사용 방법 및 1+N이슈 :construction:  
+
+---
+
+**이제 코틀린 프로젝트로..🚀**
